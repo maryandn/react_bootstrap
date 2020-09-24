@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
-function AuthForm() {
+export default function AuthForm() {
     const [show, setShow] = useState(false);
 
     const [isLoginState, setIsLoginState] = useState(true)
@@ -21,6 +21,7 @@ function AuthForm() {
         event.preventDefault();
         const user = isLoginState ? {login, password} : {login, password, email, phone};
         console.log(user);
+    }
 
     return (
         <>
@@ -108,5 +109,3 @@ function AuthForm() {
         </>
     );
 }
-
-export default AuthForm;
