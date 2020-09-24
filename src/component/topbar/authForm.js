@@ -19,7 +19,7 @@ export default function AuthForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const user = isLoginState ? {login, password} : {login, password, email, phone};
+        const user = isLoginState ? {login, password} : {login, password, email, profile:{phone}};
         console.log(user);
     }
 
