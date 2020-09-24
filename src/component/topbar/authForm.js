@@ -21,13 +21,6 @@ function AuthForm() {
         event.preventDefault();
         const user = isLoginState ? {login, password} : {login, password, email, phone};
         console.log(user);
-        // doFetch({
-        //     method: 'post',
-        //     data: {
-        //         user
-        //     }
-        // })
-    }
 
     return (
         <>
