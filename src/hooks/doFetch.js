@@ -10,7 +10,9 @@ const HttpMethod = async (method, url, body) => {
     if (body) {
         options.body = JSON.stringify(body)
     }
-    const response = await fetch(baseUrl + url, options);
+    const response = await fetch(baseUrl + url, options)
+        .then()
+        .catch();
     return await response.json();
 }
 
