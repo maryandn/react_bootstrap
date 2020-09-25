@@ -8,7 +8,7 @@ export default function AuthForm() {
 
     const [isLoginState, setIsLoginState] = useState(true)
 
-    const [login, setLogin] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ export default function AuthForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const user = isLoginState ? {login, password} : {login, password, email, profile:{phone}};
+        const user = isLoginState ? {username, password} : {username, password, email, profile:{phone}};
         console.log(user);
     }
 
@@ -49,8 +49,8 @@ export default function AuthForm() {
                             <Form.Label>Логин</Form.Label>
                             <Form.Control type="login"
                                           placeholder="Логин"
-                                          value={login}
-                                          onChange={event => setLogin(event.target.value)}
+                                          value={username}
+                                          onChange={event => setUsername(event.target.value)}
                             />
                         </Form.Group>
                         <Form.Group controlId="formBasicPassword">
@@ -64,12 +64,17 @@ export default function AuthForm() {
                         {
                             !isLoginState &&
                             <Form.Group controlId="formBasicPasswordConfirm">
-                                <Form.Label>Пароль</Form.Label>
+                                <Form.Label>Подтверждение пароля</Form.Label>
                                 <Form.Control type="password"
                                               placeholder="Подтверждение пароля"
                                               value={passwordConfirm}
                                               onChange={event => setPasswordConfirm(event.target.value)}
                                 />
+                                {(password === passwordConfirm) ? '' :
+                                    <Form.Text className="text-muted">
+                                        Пароли не совпадают
+                                    </Form.Text>
+                                }
                             </Form.Group>
                         }
                         {
@@ -81,9 +86,6 @@ export default function AuthForm() {
                                               value={email}
                                               onChange={event => setEmail(event.target.value)}
                                 />
-                                <Form.Text className="text-muted">
-                                    We'll never share your email with anyone else.
-                                </Form.Text>
                             </Form.Group>
                         }
                         {
@@ -103,7 +105,7 @@ export default function AuthForm() {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>Understood</Button>
+                    <Button variant="primary" onClick={handleSubmit}>Отправить</Button>
                 </Modal.Footer>
             </Modal>
         </>

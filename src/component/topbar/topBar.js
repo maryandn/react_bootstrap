@@ -4,7 +4,7 @@ import AuthForm from "./authForm";
 
 function TopBar() {
     const isStatus = localStorage.getItem('token')
-    const authStatus = isStatus ? false : true
+    const authStatus = !!isStatus
 
     return (
         <Navbar bg="dark" variant="dark">
