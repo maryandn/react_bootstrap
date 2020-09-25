@@ -1,7 +1,11 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import Redirect from "react-router-dom/es/Redirect";
+import {CurrentUserContext} from "../../contexts/currentUser";
+import useFetch from "../../hooks/useFetch";
 
 export default function AuthForm() {
     const [show, setShow] = useState(false);
@@ -14,13 +18,55 @@ export default function AuthForm() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const descriptionText = isLoginState ? 'Need an account?' : 'Have an account?'
+    const apiUrl = isLoginState ? '/token/' : '/signup'
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
+    const [isSuccessFullSubmit, setIsSuccessFullSubmit] = useState(false)
+    const [, setToken] = useLocalStorage('token')
+    const [, setCurrentUserState] = useContext(CurrentUserContext)
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const user = isLoginState ? {username, password} : {username, password, email, profile:{phone}};
-        console.log(user);
+        const user = isLoginState ? {"username": username, "password": password} : {username, password, email, profile: {phone}};
+        console.log(JSON.stringify(user))
+        doFetch({
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                    user
+            )
+        })
+
+        if (isLoginState) {
+            setUsername('')
+            setPassword('')
+        } else {
+            setUsername('')
+            setPassword('')
+            setPasswordConfirm('')
+            setEmail('')
+            setPhone('')
+        }
+    }
+
+    useEffect(() => {
+        if (!response) {
+            return;
+        }
+        setToken(response.user.token);
+        setIsSuccessFullSubmit(true)
+        setCurrentUserState(state => ({
+            ...state,
+            isLoggedIn: true,
+            isLoading: false,
+            currentUser: response.user
+        }));
+    }, [response, setToken, setCurrentUserState])
+    if (isSuccessFullSubmit) {
+        return <Redirect to='/'/>
     }
 
     return (
@@ -105,7 +151,12 @@ export default function AuthForm() {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>Отправить</Button>
+                    <Button variant="primary"
+                            onClick={handleSubmit}
+                            disabled={isLoading}
+                    >
+                        Отправить
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>
