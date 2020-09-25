@@ -1,15 +1,11 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import Redirect from "react-router-dom/es/Redirect";
-import {CurrentUserContext} from "../../contexts/currentUser";
-import useFetch from "../../hooks/useFetch";
+import HttpMethod from "../../hooks/doFetch";
 
 export default function AuthForm() {
     const [show, setShow] = useState(false);
-
     const [isLoginState, setIsLoginState] = useState(true)
 
     const [username, setUsername] = useState('');
@@ -21,24 +17,28 @@ export default function AuthForm() {
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
-    const [isSuccessFullSubmit, setIsSuccessFullSubmit] = useState(false)
-    const [, setToken] = useLocalStorage('token')
-    const [, setCurrentUserState] = useContext(CurrentUserContext)
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const user = isLoginState ? {"username": username, "password": password} : {username, password, email, profile: {phone}};
-        console.log(JSON.stringify(user))
-        doFetch({
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                    user
-            )
-        })
+        const user = isLoginState ?
+            {
+                "username": username,
+                "password": password
+            } :
+            {
+                "username": username,
+                "password": password,
+                "email": email,
+                "profile": {
+                    "phone": phone
+                }
+            };
+
+        const response = await HttpMethod('POST', apiUrl, user)
+        // const response = await httpMethod('GET', 'https://jsonplaceholder.typicode.com/posts',)
+        console.log(response);
+
+
 
         if (isLoginState) {
             setUsername('')
@@ -50,23 +50,6 @@ export default function AuthForm() {
             setEmail('')
             setPhone('')
         }
-    }
-
-    useEffect(() => {
-        if (!response) {
-            return;
-        }
-        setToken(response.user.token);
-        setIsSuccessFullSubmit(true)
-        setCurrentUserState(state => ({
-            ...state,
-            isLoggedIn: true,
-            isLoading: false,
-            currentUser: response.user
-        }));
-    }, [response, setToken, setCurrentUserState])
-    if (isSuccessFullSubmit) {
-        return <Redirect to='/'/>
     }
 
     return (
@@ -153,7 +136,7 @@ export default function AuthForm() {
                     </Button>
                     <Button variant="primary"
                             onClick={handleSubmit}
-                            disabled={isLoading}
+                        // disabled={isLoading}
                     >
                         Отправить
                     </Button>

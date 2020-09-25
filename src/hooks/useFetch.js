@@ -1,8 +1,7 @@
-import axios from "axios";
 import {useCallback, useEffect, useState} from "react";
 import useLocalStorage from "./useLocalStorage";
 
-export default (url) => {
+export default  (url) => {
     const baseUrl = 'http://127.0.0.1:8000'
 
     const [isLoading, setIsLoading] = useState(false)
@@ -25,17 +24,21 @@ export default (url) => {
                 }
             }
         }
-        axios(baseUrl + url, requestOptions)
-            .then(res => {
-                console.log('success', res);
-                setResponse(res.data)
-                setIsLoading(false)
-            })
-            .catch(({response}) => {
-                setIsLoading(false)
-                console.log('ERROR', response);
-                setError(response)
-            })
+        console.log(requestOptions);
+
+         fetch('http://127.0.0.1:8000/token/',requestOptions)
+             .then(res => {
+             console.log('success', res);
+                     setResponse(res.data)
+                     setIsLoading(false)
+         })
+             .catch(({response}) => {
+                     console.log(baseUrl + url)
+                     setIsLoading(false)
+                     console.log('ERROR', response);
+                     setError(response)
+                 });
+
     }, [isLoading, url, options, token])
     return [{isLoading, response, error}, doFetch]
 }
