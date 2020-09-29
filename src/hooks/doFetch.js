@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 
-const HttpMethod = (method, url, body) => {
-
+export default function HttpMethod(method, url, body) {
     const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
 
@@ -18,7 +17,7 @@ const HttpMethod = (method, url, body) => {
     }
 
     useEffect(() => {
-        setIsLoading(true)
+        // setIsLoading(true)
         fetch(baseUrl + url, options)
             .then(response => response.json())
             .then((json) => {
@@ -42,5 +41,3 @@ const HttpMethod = (method, url, body) => {
     // return response.json();
     return {data, isLoading}
 }
-
-export default HttpMethod;

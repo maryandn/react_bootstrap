@@ -1,44 +1,48 @@
-import {useCallback, useEffect, useState} from "react";
-import useLocalStorage from "./useLocalStorage";
+import {useEffect, useState, useCallback} from "react";
+// import useLocalStorage from "./useLocalStorage";
 
-export default  (url) => {
-    const baseUrl = 'http://127.0.0.1:8000'
-
-    const [isLoading, setIsLoading] = useState(false)
-    const [response, setResponse] = useState(null)
-    const [error, setError] = useState(null)
+export default (url) => {
+    const baseUrl = 'http://127.0.0.1:8000/'
+    const [isLoading, setIsLoading] =  useState(false)
+    const [response, setResponse] = useState()
+    const [error, setError] = useState()
     const [options, setOptions] = useState({})
-    const [token] = useLocalStorage('token')
+    // const [token] = useLocalStorage('token')
+
 
     const doFetch = useCallback((options = {}) => {
         setOptions(options)
         setIsLoading(true)
-    }, [])
+    },[])
 
     useEffect(() => {
         const requestOptions = {
             ...options,
             ...{
+                mode: 'cors',
                 headers: {
-                    authorization: token ? `Token ${token}` : ''
+                    'Content-Type': 'application/json'
                 }
             }
         }
-        console.log(requestOptions);
 
-         fetch('http://127.0.0.1:8000/token/',requestOptions)
-             .then(res => {
-             console.log('success', res);
-                     setResponse(res.data)
-                     setIsLoading(false)
-         })
-             .catch(({response}) => {
-                     console.log(baseUrl + url)
-                     setIsLoading(false)
-                     console.log('ERROR', response);
-                     setError(response)
-                 });
+        if (!isLoading) {
+            return
+        }
 
-    }, [isLoading, url, options, token])
+        fetch(baseUrl + url, requestOptions)
+            .then(response => response.json())
+            .then((json) => {
+                setResponse(json)
+                setIsLoading(false)
+            })
+            .catch(err => {
+                setIsLoading(false)
+                // setError(response)
+            });
+
+
+    },[isLoading,url,options])
+
     return [{isLoading, response, error}, doFetch]
 }

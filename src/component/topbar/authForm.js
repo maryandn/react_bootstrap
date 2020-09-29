@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import HttpMethod from "../../hooks/doFetch";
+import useFetch from "../../hooks/useFetch";
 
 export default function AuthForm() {
     const [show, setShow] = useState(false);
@@ -18,8 +19,10 @@ export default function AuthForm() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [ xxx ,doFetch] = useFetch('token/')
+
     const handleSubmit = (event) => {
-        event.preventDefault();
+
         const user = isLoginState ?
             {
                 "username": username,
@@ -34,22 +37,31 @@ export default function AuthForm() {
                 }
             };
 
-        const response = HttpMethod('POST', apiUrl, user)
+
+
+        doFetch({method: 'POST', body: JSON.stringify(user)})
+        console.log(xxx);
+
+
+        // event.preventDefault();
+
+
+        // const response = HttpMethod('POST', apiUrl, user)
         // const response = await httpMethod('GET', 'https://jsonplaceholder.typicode.com/posts',)
-        console.log(response.data);
 
 
 
-        if (isLoginState) {
-            setUsername('')
-            setPassword('')
-        } else {
-            setUsername('')
-            setPassword('')
-            setPasswordConfirm('')
-            setEmail('')
-            setPhone('')
-        }
+
+        // if (isLoginState) {
+        //     setUsername('')
+        //     setPassword('')
+        // } else {
+        //     setUsername('')
+        //     setPassword('')
+        //     setPasswordConfirm('')
+        //     setEmail('')
+        //     setPhone('')
+        // }
     }
 
     return (
