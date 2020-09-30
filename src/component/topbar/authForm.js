@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import HttpMethod from "../../hooks/doFetch";
 import useFetch from "../../hooks/useFetch";
 
 export default function AuthForm() {
@@ -16,12 +15,12 @@ export default function AuthForm() {
     const [phone, setPhone] = useState('');
     const descriptionText = isLoginState ? 'Need an account?' : 'Have an account?'
     const apiUrl = isLoginState ? '/token/' : '/signup'
+    const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const [ xxx ,doFetch] = useFetch('token/')
-
     const handleSubmit = (event) => {
+        event.preventDefault();
 
         const user = isLoginState ?
             {
@@ -37,32 +36,26 @@ export default function AuthForm() {
                 }
             };
 
-
-
         doFetch({method: 'POST', body: JSON.stringify(user)})
-        console.log(xxx);
 
-
-        // event.preventDefault();
-
-
-        // const response = HttpMethod('POST', apiUrl, user)
-        // const response = await httpMethod('GET', 'https://jsonplaceholder.typicode.com/posts',)
-
-
-
-
-        // if (isLoginState) {
-        //     setUsername('')
-        //     setPassword('')
-        // } else {
-        //     setUsername('')
-        //     setPassword('')
-        //     setPasswordConfirm('')
-        //     setEmail('')
-        //     setPhone('')
-        // }
+        if (isLoginState) {
+            setUsername('')
+            setPassword('')
+        } else {
+            setUsername('')
+            setPassword('')
+            setPasswordConfirm('')
+            setEmail('')
+            setPhone('')
+        }
     }
+
+    // if(isLoading){
+    //
+    // }
+
+    response && localStorage.setItem('token',response.access)
+    response && localStorage.setItem('refresh',response.refresh)
 
     return (
         <>
@@ -146,12 +139,18 @@ export default function AuthForm() {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary"
+                    <button className="btn btn-primary"
+                            type="button"
                             onClick={handleSubmit}
-                        // disabled={isLoading}
                     >
-                        Отправить
-                    </Button>
+                        {
+                            isLoading ?
+                                <span className="spinner-border spinner-border-sm" role="status"
+                                      aria-hidden="true"></span>
+                                : ''
+                        }
+                        {isLoading ? 'Loading...' : 'Отправить'}
+                    </button>
                 </Modal.Footer>
             </Modal>
         </>

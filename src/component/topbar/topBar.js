@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import AuthForm from "./authForm";
+import Button from "react-bootstrap/Button";
 
 function TopBar() {
     const isStatus = localStorage.getItem('token')
@@ -19,6 +20,12 @@ function TopBar() {
                         <div>
                             <AuthForm/>,
                         </div>
+                }
+                {
+                    authStatus &&
+                    <Button variant="outline-secondary">
+                        Log Out
+                    </Button>
                 }
 
             </Navbar.Collapse>

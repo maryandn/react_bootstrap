@@ -1,21 +1,24 @@
 import {useEffect, useState, useCallback} from "react";
-// import useLocalStorage from "./useLocalStorage";
 
 export default (url) => {
-    const baseUrl = 'http://127.0.0.1:8000/'
+    const baseUrl = 'http://127.0.0.1:8000'
     const [isLoading, setIsLoading] =  useState(false)
-    const [response, setResponse] = useState()
-    const [error, setError] = useState()
+    const [response, setResponse] = useState(null)
+    const [error, setError] = useState(null)
     const [options, setOptions] = useState({})
-    // const [token] = useLocalStorage('token')
-
 
     const doFetch = useCallback((options = {}) => {
         setOptions(options)
         setIsLoading(true)
+        setResponse(null)
     },[])
 
     useEffect(() => {
+
+        if (!isLoading) {
+            return
+        }
+
         const requestOptions = {
             ...options,
             ...{
@@ -26,21 +29,16 @@ export default (url) => {
             }
         }
 
-        if (!isLoading) {
-            return
-        }
-
         fetch(baseUrl + url, requestOptions)
             .then(response => response.json())
-            .then((json) => {
-                setResponse(json)
+            .then(res => {
+                setResponse(res)
                 setIsLoading(false)
             })
-            .catch(err => {
+            .catch(({response}) => {
                 setIsLoading(false)
-                // setError(response)
+                setError(response)
             });
-
 
     },[isLoading,url,options])
 
