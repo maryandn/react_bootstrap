@@ -1,11 +1,22 @@
-import React from "react";
+import React, {useContext} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import AuthForm from "./authForm";
 import Button from "react-bootstrap/Button";
+import {CurrentUserContext} from "../../contexts/currentUser";
 
 function TopBar() {
-    const isStatus = localStorage.getItem('token')
-    const authStatus = !!isStatus
+
+    const [isLoggedIn, setIsLoggedIn] = useContext(CurrentUserContext)
+    // const isStatus = localStorage.getItem('token')
+    // const authStatus = !!isStatus
+
+    const handleSubmitLogOut = () =>{
+        localStorage.clear()
+        setIsLoggedIn(state => ({
+            ...state,
+            isLoggedIn: false
+        }))
+    }
 
     return (
         <Navbar bg="dark" variant="dark">
@@ -13,7 +24,7 @@ function TopBar() {
             <Navbar.Toggle/>
             <Navbar.Collapse className="justify-content-end">
                 {
-                    authStatus ?
+                    isLoggedIn.isLoggedIn ?
                         <Navbar.Text>
                             Signed in as: <a href="#login">Mark Otto</a>
                         </Navbar.Text> :
@@ -22,8 +33,10 @@ function TopBar() {
                         </div>
                 }
                 {
-                    authStatus &&
-                    <Button variant="outline-secondary">
+                    isLoggedIn.isLoggedIn &&
+                    <Button variant="outline-secondary"
+                            onClick={handleSubmitLogOut}
+                    >
                         Log Out
                     </Button>
                 }

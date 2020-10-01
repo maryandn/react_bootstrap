@@ -1,21 +1,25 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
+import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function AuthForm() {
-    const [show, setShow] = useState(false);
-    const [isLoginState, setIsLoginState] = useState(true)
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+
+    const [isLoginState, setIsLoginState] = useState(true)
+    const [, setIsLoggedIn] = useContext(CurrentUserContext)
     const descriptionText = isLoginState ? 'Need an account?' : 'Have an account?'
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
+
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -50,12 +54,25 @@ export default function AuthForm() {
         }
     }
 
-    // if(isLoading){
-    //
-    // }
+    useEffect(() => {
+        if (response != null) {
+            console.log(response)
+            if(typeof (response.access) !== 'undefined'){
+                localStorage.setItem('token', response.access)
+            }
+            if(typeof (response.refresh) !== 'undefined'){
+                localStorage.setItem('token', response.refresh)
+            }
+            if(typeof (response.detail) !== 'undefined'){
+                console.log(response.detail)
+            }
+        }
+    }, [response])
 
-    response && localStorage.setItem('token',response.access)
-    response && localStorage.setItem('refresh',response.refresh)
+    localStorage.length && setIsLoggedIn(state => ({
+        ...state,
+        isLoggedIn: true
+    }))
 
     return (
         <>

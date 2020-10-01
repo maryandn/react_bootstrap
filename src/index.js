@@ -3,13 +3,17 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 import {BrowserRouter as Router} from 'react-router-dom'
+import {CurrentUserProvider} from "./contexts/currentUser";
 
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
-  document.getElementById('root')
-);
+    <CurrentUserProvider>
+        <Router>
+            <App/>
+        </Router>,
+    </CurrentUserProvider>,
+document.getElementById('root')
+)
+;
 
 // http://127.0.0.1:8000/signin - post
 // {
