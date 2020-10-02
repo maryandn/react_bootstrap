@@ -4,8 +4,11 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
 import {CurrentUserContext} from "../../contexts/currentUser";
+import { useForm } from "react-hook-form";
 
 export default function AuthForm() {
+
+    const { handleSubmit, register, errors } = useForm();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -19,13 +22,34 @@ export default function AuthForm() {
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
 
+    const [errorValidation, setErrorValidation] = useState(null)
+    // const [userNameValidation, setUserNameValidation] = useState(false)
+    // const [passwordValidation, setPasswordValidation] = useState(false)
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    useEffect(()=>{
+        if (!username){
+            setErrorValidation('логин не может быть пустой')
+        } else if (username.length < 6){
+            setErrorValidation('мало символов')
+        } else {
+            setErrorValidation('')
+        }
+    }, [username])
 
+    const handleFinalSubmit = (event) => {
+        // event.preventDefault();
+
+        // if (isLoginState) {
+        //     if (passwordValidation){
+        //
+        //     }
+        // } else {
+        //
+        // }
         const user = isLoginState ?
             {
                 "username": username,
@@ -44,6 +68,7 @@ export default function AuthForm() {
 
         if (isLoginState) {
             setUsername('')
+
             setPassword('')
         } else {
             setUsername('')
@@ -57,15 +82,22 @@ export default function AuthForm() {
     useEffect(() => {
         if (response != null) {
             console.log(response)
-            if(typeof (response.access) !== 'undefined'){
+            if (typeof (response.access) !== 'undefined') {
                 localStorage.setItem('token', response.access)
             }
-            if(typeof (response.refresh) !== 'undefined'){
+            if (typeof (response.refresh) !== 'undefined') {
                 localStorage.setItem('token', response.refresh)
             }
-            if(typeof (response.detail) !== 'undefined'){
-                console.log(response.detail)
+            if (typeof (response.detail) !== 'undefined') {
+                const notFoundUser = response.detail
+                console.log(notFoundUser)
             }
+            // if(typeof (response.username) !== 'undefined'){
+            //     setNotFoundUserName(response.username ? true : false)
+            // }
+            // if(typeof (response.password) !== 'undefined'){
+            //     setNotFoundPassword(response.password ? true : false)
+            // }
         }
     }, [response])
 
@@ -99,10 +131,19 @@ export default function AuthForm() {
                         <Form.Group controlId="formBasicLogin">
                             <Form.Label>Логин</Form.Label>
                             <Form.Control type="login"
+                                          name='fast'
                                           placeholder="Логин"
                                           value={username}
                                           onChange={event => setUsername(event.target.value)}
+                                          ref={register({
+                                              required: 'ftjdxdfhxdfjxdfgj'
+                                          })}
                             />
+                            {errorValidation ?
+                                <Form.Text className="text-muted">
+                                    {errorValidation}{errors.fast && <span>{errors.fast.message}</span>}
+                                </Form.Text> : ''
+                            }
                         </Form.Group>
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Пароль</Form.Label>
@@ -111,6 +152,11 @@ export default function AuthForm() {
                                           value={password}
                                           onChange={event => setPassword(event.target.value)}
                             />
+                            {/*{notFoundPassword ?*/}
+                            {/*    <Form.Text className="text-muted">*/}
+                            {/*        Это поле не может быть пустым.*/}
+                            {/*    </Form.Text> : ''*/}
+                            {/*}*/}
                         </Form.Group>
                         {
                             !isLoginState &&
@@ -158,7 +204,7 @@ export default function AuthForm() {
                     </Button>
                     <button className="btn btn-primary"
                             type="button"
-                            onClick={handleSubmit}
+                            onClick={handleSubmit(handleFinalSubmit)}
                     >
                         {
                             isLoading ?
