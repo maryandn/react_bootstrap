@@ -4,11 +4,12 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
 import {CurrentUserContext} from "../../contexts/currentUser";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
+import IntlTelInput from 'react-bootstrap-intl-tel-input'
 
 export default function AuthForm() {
 
-    const { handleSubmit, register, errors } = useForm();
+    const {handleSubmit, register, errors} = useForm();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -22,34 +23,13 @@ export default function AuthForm() {
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
 
-    const [errorValidation, setErrorValidation] = useState(null)
-    // const [userNameValidation, setUserNameValidation] = useState(false)
-    // const [passwordValidation, setPasswordValidation] = useState(false)
-
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    useEffect(()=>{
-        if (!username){
-            setErrorValidation('логин не может быть пустой')
-        } else if (username.length < 6){
-            setErrorValidation('мало символов')
-        } else {
-            setErrorValidation('')
-        }
-    }, [username])
-
     const handleFinalSubmit = (event) => {
         // event.preventDefault();
 
-        // if (isLoginState) {
-        //     if (passwordValidation){
-        //
-        //     }
-        // } else {
-        //
-        // }
         const user = isLoginState ?
             {
                 "username": username,
@@ -81,7 +61,6 @@ export default function AuthForm() {
 
     useEffect(() => {
         if (response != null) {
-            console.log(response)
             if (typeof (response.access) !== 'undefined') {
                 localStorage.setItem('token', response.access)
             }
@@ -90,14 +69,7 @@ export default function AuthForm() {
             }
             if (typeof (response.detail) !== 'undefined') {
                 const notFoundUser = response.detail
-                console.log(notFoundUser)
             }
-            // if(typeof (response.username) !== 'undefined'){
-            //     setNotFoundUserName(response.username ? true : false)
-            // }
-            // if(typeof (response.password) !== 'undefined'){
-            //     setNotFoundPassword(response.password ? true : false)
-            // }
         }
     }, [response])
 
@@ -131,32 +103,42 @@ export default function AuthForm() {
                         <Form.Group controlId="formBasicLogin">
                             <Form.Label>Логин</Form.Label>
                             <Form.Control type="login"
-                                          name='fast'
+                                          name="login"
                                           placeholder="Логин"
                                           value={username}
                                           onChange={event => setUsername(event.target.value)}
                                           ref={register({
-                                              required: 'ftjdxdfhxdfjxdfgj'
+                                              required: 'логин не может быть пустой',
+                                              minLength: 5,
+                                              maxLength: 20
                                           })}
                             />
-                            {errorValidation ?
-                                <Form.Text className="text-muted">
-                                    {errorValidation}{errors.fast && <span>{errors.fast.message}</span>}
-                                </Form.Text> : ''
-                            }
+                            <Form.Text className="text-muted">
+                                {errors.login && <span className="text-danger">{errors.login.message}</span>}
+                            </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Пароль</Form.Label>
                             <Form.Control type="password"
+                                          name='password'
                                           placeholder="Пароль"
                                           value={password}
                                           onChange={event => setPassword(event.target.value)}
+                                          ref={register({
+                                              required: 'пароль не может быть пустой',
+                                              minLength: {
+                                                  value: 5,
+                                                  message: 'пароль не может быть меньше 5'
+                                              },
+                                              maxLength: {
+                                                  value: 10,
+                                                  message: 'пароль не может быть больше 10'
+                                              }
+                                          })}
                             />
-                            {/*{notFoundPassword ?*/}
-                            {/*    <Form.Text className="text-muted">*/}
-                            {/*        Это поле не может быть пустым.*/}
-                            {/*    </Form.Text> : ''*/}
-                            {/*}*/}
+                            <Form.Text className="text-muted">
+                                {errors.password && <span className="text-danger">{errors.password.message}</span>}
+                            </Form.Text>
                         </Form.Group>
                         {
                             !isLoginState &&
@@ -179,21 +161,44 @@ export default function AuthForm() {
                             <Form.Group controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control type="email"
+                                              name='email'
                                               placeholder="Enter email"
                                               value={email}
                                               onChange={event => setEmail(event.target.value)}
+                                              ref={register({
+                                                  required: 'Email не может быть пустой',
+                                                  pattern: {
+                                                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                      message: "Invalid email address"
+                                                  }
+                                              })}
                                 />
+                                <Form.Text className="text-muted">
+                                    {errors.email && <span className="text-danger">{errors.email.message}</span>}
+                                </Form.Text>
                             </Form.Group>
                         }
                         {
                             !isLoginState &&
                             <Form.Group controlId="formBasicPhone">
                                 <Form.Label>Номер Телефона</Form.Label>
-                                <Form.Control type="phone"
-                                              placeholder="Номер Телефона"
-                                              value={phone}
-                                              onChange={event => setPhone(event.target.value)}
+                                <IntlTelInput
+                                    preferredCountries={['UA', 'US', 'GB']}
+                                    defaultValue={'+380 '}
+                                    paginate={4}
+                                    placeholder={'Search for a calling code by country'}
+                                    validMessage={'This phone number is valid'}
+                                    onChange={data => setPhone(data.phoneNumber)}
                                 />
+                                {/*<PhoneInput*/}
+                                {/*    placeholder="Enter phone number"*/}
+                                {/*    value={phone}*/}
+                                {/*    onChange={event => setPhone(event.target.value)}/>*/}
+                                {/*<Form.Control type="phone"*/}
+                                {/*              placeholder="Номер Телефона"*/}
+                                {/*              value={phone}*/}
+                                {/*              onChange={event => setPhone(event.target.value)}*/}
+                                {/*/>*/}
                             </Form.Group>
                         }
                     </Form>

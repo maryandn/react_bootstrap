@@ -3,13 +3,17 @@ import Navbar from "react-bootstrap/Navbar";
 import AuthForm from "./authForm";
 import Button from "react-bootstrap/Button";
 import {CurrentUserContext} from "../../contexts/currentUser";
+import useFetch from "../../hooks/useFetch";
 
 function TopBar() {
 
+    const apiUrl = '/user'
+    const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
     const [isLoggedIn, setIsLoggedIn] = useContext(CurrentUserContext)
-    // const isStatus = localStorage.getItem('token')
-    // const authStatus = !!isStatus
 
+    const config = {
+        'Authorization': `Bearer ${localStorage}`
+    }
     const handleSubmitLogOut = () =>{
         localStorage.clear()
         setIsLoggedIn(state => ({
@@ -17,6 +21,8 @@ function TopBar() {
             isLoggedIn: false
         }))
     }
+
+    doFetch({method: 'POST', body: JSON.stringify(config)})
 
     return (
         <Navbar bg="dark" variant="dark">

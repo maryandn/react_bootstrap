@@ -1,8 +1,9 @@
 import {useEffect, useState, useCallback} from "react";
+import unregister from "../interceptor";
 
 export default (url) => {
     const baseUrl = 'http://127.0.0.1:8000'
-    const [isLoading, setIsLoading] =  useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [response, setResponse] = useState(null)
     const [error, setError] = useState(null)
     const [options, setOptions] = useState({})
@@ -11,7 +12,7 @@ export default (url) => {
         setOptions(options)
         setIsLoading(true)
         setResponse(null)
-    },[])
+    }, [])
 
     useEffect(() => {
 
@@ -24,8 +25,10 @@ export default (url) => {
             ...{
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer <token>'
+                },
+                body
             }
         }
 
@@ -40,7 +43,9 @@ export default (url) => {
                 setError(response)
             });
 
-    },[isLoading,url,options])
+        unregister()
+
+    }, [isLoading, url, options])
 
     return [{isLoading, response, error}, doFetch]
 }
