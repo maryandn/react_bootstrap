@@ -1,5 +1,6 @@
 import {useEffect, useState, useCallback} from "react";
 import unregister from "../interceptor";
+import axios from "axios";
 
 export default (url) => {
     const baseUrl = 'http://127.0.0.1:8000'
@@ -12,28 +13,29 @@ export default (url) => {
         setOptions(options)
         setIsLoading(true)
         setResponse(null)
-    }, [])
+        console.log(options)
+    }, [options])
 
     useEffect(() => {
 
         if (!isLoading) {
             return
         }
-
+        console.log(isLoading + 'hi')
         const requestOptions = {
             ...options,
             ...{
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer <token>'
+
                 },
-                body
             }
         }
 
-        fetch(baseUrl + url, requestOptions)
-            .then(response => response.json())
+        console.log(url)
+        console.log(requestOptions)
+        axios(baseUrl + url, requestOptions)
             .then(res => {
                 setResponse(res)
                 setIsLoading(false)
@@ -42,9 +44,7 @@ export default (url) => {
                 setIsLoading(false)
                 setError(response)
             });
-
         unregister()
-
     }, [isLoading, url, options])
 
     return [{isLoading, response, error}, doFetch]

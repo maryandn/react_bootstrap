@@ -18,7 +18,7 @@ export default function AuthForm() {
     const [phone, setPhone] = useState('');
 
     const [isLoginState, setIsLoginState] = useState(true)
-    const [, setIsLoggedIn] = useContext(CurrentUserContext)
+    const [, setState] = useContext(CurrentUserContext)
     const descriptionText = isLoginState ? 'Need an account?' : 'Have an account?'
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
@@ -44,7 +44,7 @@ export default function AuthForm() {
                 }
             };
 
-        doFetch({method: 'POST', body: JSON.stringify(user)})
+        doFetch({method: 'POST', data: JSON.stringify(user)})
 
         if (isLoginState) {
             setUsername('')
@@ -63,17 +63,19 @@ export default function AuthForm() {
         if (response != null) {
             if (typeof (response.access) !== 'undefined') {
                 localStorage.setItem('token', response.access)
+
+                setState(state => ({
+                    ...state,
+                    token: localStorage.getItem('token')
+                }))
             }
             if (typeof (response.refresh) !== 'undefined') {
-                localStorage.setItem('token', response.refresh)
-            }
-            if (typeof (response.detail) !== 'undefined') {
-                const notFoundUser = response.detail
+                localStorage.setItem('refresh', response.refresh)
             }
         }
     }, [response])
 
-    localStorage.length && setIsLoggedIn(state => ({
+    localStorage.length && setState(state => ({
         ...state,
         isLoggedIn: true
     }))
