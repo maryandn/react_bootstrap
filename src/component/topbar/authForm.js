@@ -18,7 +18,7 @@ export default function AuthForm() {
     const [phone, setPhone] = useState('');
 
     const [isLoginState, setIsLoginState] = useState(true)
-    const [, setState] = useContext(CurrentUserContext)
+    const [state, setState] = useContext(CurrentUserContext)
     const descriptionText = isLoginState ? 'Need an account?' : 'Have an account?'
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
@@ -48,7 +48,6 @@ export default function AuthForm() {
 
         if (isLoginState) {
             setUsername('')
-
             setPassword('')
         } else {
             setUsername('')
@@ -63,11 +62,6 @@ export default function AuthForm() {
         if (response != null) {
             if (typeof (response.access) !== 'undefined') {
                 localStorage.setItem('token', response.access)
-
-                setState(state => ({
-                    ...state,
-                    token: localStorage.getItem('token')
-                }))
             }
             if (typeof (response.refresh) !== 'undefined') {
                 localStorage.setItem('refresh', response.refresh)

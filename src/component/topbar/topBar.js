@@ -13,7 +13,6 @@ function TopBar() {
 
     const getName = () => {
         doFetch({method: 'GET'})
-        console.log('getName')
     }
 
     const handleSubmitLogOut = () =>{
@@ -23,10 +22,6 @@ function TopBar() {
             isLoggedIn: false
         }))
     }
-
-    console.log(isLoading);
-    console.log(response);
-    console.log(error);
 
     return (
         <Navbar bg="dark" variant="dark">
@@ -41,7 +36,7 @@ function TopBar() {
                 {
                     state.isLoggedIn ?
                         <Navbar.Text>
-                            Signed in as: <a href="#login">Mark Otto</a>
+                            Signed in as: <a href="#login">{(response !== null) ? response.username : ''}</a>
                         </Navbar.Text> :
                         <div>
                             <AuthForm/>,
