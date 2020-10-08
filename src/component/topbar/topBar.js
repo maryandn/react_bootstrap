@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import AuthForm from "./authForm";
 import Button from "react-bootstrap/Button";
@@ -10,12 +10,24 @@ function TopBar() {
     const apiUrl = '/user'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
     const [state, setState] = useContext(CurrentUserContext)
+    const [render, setRender] = useState(state.currentUser)
 
-    const getName = () => {
-        doFetch({method: 'GET'})
-    }
+    useEffect(()=>{
+        if (state.isLoggedIn) {
+            if(localStorage.length){
+                doFetch({method: 'GET'})
+            } else {
+                setState(state => ({
+                    ...state,
+                    isLoggedIn: false
+                }))
+            }
+        }
+    }, [])
 
-    const handleSubmitLogOut = () =>{
+    console.log(state.currentUser)
+
+    const handleSubmitLogOut = () => {
         localStorage.clear()
         setState(state => ({
             ...state,
@@ -26,11 +38,6 @@ function TopBar() {
     return (
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand href="#home">Super Shop</Navbar.Brand>
-            <Button variant="outline-secondary"
-                    onClick={getName}
-            >
-                Name
-            </Button>
             <Navbar.Toggle/>
             <Navbar.Collapse className="justify-content-end">
                 {

@@ -3,9 +3,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
-import {CurrentUserContext} from "../../contexts/currentUser";
 import {useForm} from "react-hook-form";
 import IntlTelInput from 'react-bootstrap-intl-tel-input'
+import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function AuthForm() {
 
@@ -18,17 +18,16 @@ export default function AuthForm() {
     const [phone, setPhone] = useState('');
 
     const [isLoginState, setIsLoginState] = useState(true)
-    const [state, setState] = useContext(CurrentUserContext)
     const descriptionText = isLoginState ? 'Need an account?' : 'Have an account?'
     const apiUrl = isLoginState ? '/token/' : '/signup'
     const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
+    const [, setState] = useContext(CurrentUserContext)
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const handleFinalSubmit = (event) => {
-        // event.preventDefault();
 
         const user = isLoginState ?
             {
@@ -44,7 +43,7 @@ export default function AuthForm() {
                 }
             };
 
-        doFetch({method: 'POST', data: JSON.stringify(user)})
+        doFetch({method: 'POST', body: JSON.stringify(user)})
 
         if (isLoginState) {
             setUsername('')
@@ -62,6 +61,10 @@ export default function AuthForm() {
         if (response != null) {
             if (typeof (response.access) !== 'undefined') {
                 localStorage.setItem('token', response.access)
+                setState(state => ({
+                    ...state,
+                    currentUser: true
+                }))
             }
             if (typeof (response.refresh) !== 'undefined') {
                 localStorage.setItem('refresh', response.refresh)
@@ -69,10 +72,10 @@ export default function AuthForm() {
         }
     }, [response])
 
-    localStorage.length && setState(state => ({
-        ...state,
-        isLoggedIn: true
-    }))
+    // localStorage.length && setState(state => ({
+    //     ...state,
+    //     currentUser: true
+    // }))
 
     return (
         <>

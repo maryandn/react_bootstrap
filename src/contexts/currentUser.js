@@ -7,10 +7,9 @@ export const CurrentUserProvider = ({children}) => {
 
     const [state, setState] = useState({
         isLoading: false,
-        isLoggedIn: false,
-        currentUser: null,
+        isLoggedIn: true,
+        currentUser: false,
     })
-
 
     return (
         <CurrentUserContext.Provider value={[state, setState]}>

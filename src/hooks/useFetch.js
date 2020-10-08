@@ -1,8 +1,5 @@
 import {useEffect, useState, useCallback, useContext} from "react";
-// import unregister from "../interceptor";
-import axios from "axios";
 import {CurrentUserContext} from "../contexts/currentUser";
-
 
 export default (url) => {
     const baseUrl = 'http://127.0.0.1:8000'
@@ -24,38 +21,29 @@ export default (url) => {
             return
         }
 
-        const optionsHeaders = !state.isLoggedIn ?
-            {
+        const requestOptions = {
+            ...options,
+            ...{
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            } :
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }
-
-        const requestOptions = {
-            ...options,
-            ...optionsHeaders,
-            ...{
-                mode: 'cors'
             }
         }
 
-        console.log(requestOptions);
-        axios(baseUrl + url, requestOptions)
+        fetch(baseUrl + url, requestOptions)
+            .then(response => response.json())
             .then(res => {
-                setResponse(res.data)
+                setResponse(res)
+                console.log(res);
                 setIsLoading(false)
             })
             .catch(({response}) => {
                 setIsLoading(false)
                 setError(response)
+                console.log(response);
             });
-        // unregister()
+
     }, [isLoading, url, options])
 
     return [{isLoading, response, error}, doFetch]
