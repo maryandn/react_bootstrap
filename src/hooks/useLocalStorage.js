@@ -1,22 +1,43 @@
-import React, {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import useFetch from "./useFetch";
+import {CurrentUserContext} from "../contexts/currentUser";
 
 export default function () {
-    const apiUrl = '/token/refresh/'
-    const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
 
-    const token = localStorage.getItem('refresh')
+    const [state, setState] = useContext(CurrentUserContext)
+    const apiUrl = state.tokenValid ? '/user' : '/token/refresh/'
+    const [{response}, doFetch] = useFetch(apiUrl)
 
-    doFetch({method: 'POST', body: JSON.stringify(token)})
+    const token = localStorage.getItem('token')
+    const tokenRefresh = localStorage.getItem('refresh')
 
-    console.log(response);
-    useEffect(() => {
-        if (response != null) {
-            if (typeof (response.access) !== 'undefined') {
-                localStorage.setItem('token', response.access)
-            }
+    const re = {
+        "refresh": tokenRefresh
+    }
+
+    useEffect(()=>{
+        if (token == null) {
+            setState(state => ({
+                ...state,
+                isLoggedIn: false
+            }))
+            console.log(state.isLoggedIn)
+        } else {
+            console.log(token)
         }
-    }, [response])
-    return
+    }, [])
+
+    // useEffect(() => {
+    //     if (token.length) {
+    //         if (state.tokenValid) {
+    //             doFetch({method: 'GET'})
+    //             console.log("token")
+    //         } else {
+    //             doFetch({method: 'POST', body: JSON.stringify(re)})
+    //             console.log(tokenRefresh)
+    //         }
+    //     }
+    // }, [])
+    // return
 }
 

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import AuthForm from "./authForm";
 import Button from "react-bootstrap/Button";
@@ -7,25 +7,10 @@ import useFetch from "../../hooks/useFetch";
 
 function TopBar() {
 
-    const apiUrl = '/user'
-    const [{isLoading, response, error}, doFetch] = useFetch(apiUrl)
     const [state, setState] = useContext(CurrentUserContext)
-    const [render, setRender] = useState(state.currentUser)
-
-    useEffect(()=>{
-        if (state.isLoggedIn) {
-            if(localStorage.length){
-                doFetch({method: 'GET'})
-            } else {
-                setState(state => ({
-                    ...state,
-                    isLoggedIn: false
-                }))
-            }
-        }
-    }, [])
-
-    console.log(state.currentUser)
+    const apiUrl = state.tokenValid ? '/user' : '/token/refresh'
+    const [{response}, doFetch] = useFetch(apiUrl)
+    const token = localStorage.getItem('token')
 
     const handleSubmitLogOut = () => {
         localStorage.clear()
@@ -34,6 +19,32 @@ function TopBar() {
             isLoggedIn: false
         }))
     }
+
+    useEffect(()=>{
+        if (token){
+            setState(state => ({
+                ...state,
+                isLoggedIn: true
+            }))
+        }
+    }, [])
+
+    useEffect(()=>{
+        if (state.isLoggedIn === true) {
+            console.log('doFetch topBar')
+            // getFetch()d;fjh;
+            doFetch({method: 'GET'})
+        }
+    }, [state.isLoggedIn])
+
+    useEffect(()=>{
+        if (response !== null && response.code){
+            doFetch({method: 'GET'})
+
+            console.log("token_not_valid")
+            // console.log(response)
+        }
+    }, [response])
 
     return (
         <Navbar bg="dark" variant="dark">

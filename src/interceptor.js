@@ -1,10 +1,13 @@
 import fetchIntercept from 'fetch-intercept';
-import refreshToken from "./hooks/useLocalStorage";
 
 export const unregister = fetchIntercept.register({
     request: function (url, config) {
-        if(localStorage.length){
-            config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
+        if(url !== 'http://127.0.0.1:8000/token/refresh/' && url !== 'http://127.0.0.1:8000/token/'){
+            const token = localStorage.getItem('token')
+            if(token){
+                console.log(token);
+                config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
+            }
         }
         console.log(config);
         console.log(url);
@@ -18,10 +21,10 @@ export const unregister = fetchIntercept.register({
     },
 
     response: function (response) {
+
         if (response.status === 401) {
-            refreshToken()
+            console.log(response.status)
         }
-        console.log(response);
         return response;
     },
 
