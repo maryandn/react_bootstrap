@@ -9,8 +9,14 @@ export const unregister = fetchIntercept.register({
                 config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
             }
         }
-        console.log(config);
+        if(url === 'http://127.0.0.1:8000/token/refresh/'){
+
+            config.body = JSON.stringify({
+                "refresh": localStorage.getItem('refresh')
+            })
+        }
         console.log(url);
+        console.log(config);
         return [url, config];
     },
 
@@ -29,8 +35,8 @@ export const unregister = fetchIntercept.register({
     },
 
     responseError: function (error) {
-        console.log(error);
-        console.log('response error interceptor');
+        // console.log(error);
+        // console.log('response error interceptor');
         return Promise.reject(error);
     }
 });

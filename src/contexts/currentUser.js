@@ -8,8 +8,6 @@ export const CurrentUserProvider = ({children}) => {
     const [state, setState] = useState({
         isLoading: false,
         isLoggedIn: false,
-        currentUser: false,
-        tokenValid: true
     })
 
     return (
