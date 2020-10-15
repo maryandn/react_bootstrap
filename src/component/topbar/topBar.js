@@ -51,7 +51,6 @@ function TopBar() {
         }
         if ( apiUrl === '/token/refresh/' && response !== null && response.code){
             handleSubmitLogOut()
-            console.log('fuck off');
         }
     }, [response])
 

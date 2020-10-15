@@ -10,7 +10,6 @@ export const unregister = fetchIntercept.register({
             }
         }
         if(url === 'http://127.0.0.1:8000/token/refresh/'){
-
             config.body = JSON.stringify({
                 "refresh": localStorage.getItem('refresh')
             })
