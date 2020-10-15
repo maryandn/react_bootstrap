@@ -32,7 +32,6 @@ function TopBar() {
     }, [])
 
     useEffect(()=>{
-        console.log('get user')
         if (state.isLoggedIn === true) {
             doFetch({method: 'GET'})
         }

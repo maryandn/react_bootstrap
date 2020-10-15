@@ -10,7 +10,7 @@ ReactDOM.render(
     <CurrentUserProvider>
         <Router>
             <App/>
-        </Router>,
+        </Router>
     </CurrentUserProvider>,
 document.getElementById('root')
 )
