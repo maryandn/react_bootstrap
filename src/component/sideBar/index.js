@@ -1,5 +1,5 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useEffect} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,6 +12,7 @@ import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
+import useFetch from "../../hooks/useFetch";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,78 +27,45 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NestedList() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
-    const [open1, setOpen1] = React.useState(true);
+    const apiUrl = '/categories/'
+    const [{response}, doFetch] = useFetch(apiUrl)
 
     const handleClick = () => {
         setOpen(!open);
     };
 
-    const handleClick1 = () => {
-        setOpen1(!open1);
-    };
+    useEffect(() => {
+        doFetch({method: 'GET'})
+    }, [])
 
     return (
         <List
             component="nav"
             aria-labelledby="nested-list-subheader"
-            // subheader={
-            //     <ListSubheader component="div" id="nested-list-subheader">
-            //         Nested List Items
-            //     </ListSubheader>
-            // }
             className={classes.root}
         >
-            <ListItem button>
-                <ListItemIcon>
-                    <SendIcon />
-                </ListItemIcon>
-                <ListItemText primary="Sent mail" />
-            </ListItem>
+            {
+                (response !== null) ?
+                    response.map((category) =>
+                        <ListItem button onClick={handleClick}>
+                            <ListItemIcon>
+                                <DraftsIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary={category.name}/>
+                            {open ? <ExpandLess/> : <ExpandMore/>}
+                        </ListItem>
+                    ) : ''
+            }
 
-            <ListItem button onClick={handleClick}>
-                <ListItemIcon>
-                    <DraftsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Drafts" />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItem button className={classes.nested}>
                         <ListItemIcon>
-                            <StarBorder />
+                            <StarBorder/>
                         </ListItemIcon>
-                        <ListItemText primary="Starred" />
-                    </ListItem>
-                </List>
-            </Collapse>
-
-            <ListItem button onClick={handleClick1}>
-                <ListItemIcon>
-                    <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-                {open1 ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={open1} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItem button className={classes.nested}>
-                        <ListItemIcon>
-                            <StarBorder />
-                        </ListItemIcon>
-                        <ListItemText primary="Starred" />
-                    </ListItem>
-                </List>
-            </Collapse>
-            <Collapse in={open1} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItem button className={classes.nested}>
-                        <ListItemIcon>
-                            <StarBorder />
-                        </ListItemIcon>
-                        <ListItemText primary="Starred" />
+                        <ListItemText primary="Starred"/>
                     </ListItem>
                 </List>
             </Collapse>
