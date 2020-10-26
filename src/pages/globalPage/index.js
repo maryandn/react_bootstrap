@@ -4,11 +4,11 @@ import Article from "../../component/article";
 
 function GlobalPage() {
     return (
-        <div class="row m-0">
-            <div class="col-2">
+        <div className="row m-0">
+            <div className="col-2">
                 <SideBar/>
             </div>
-            <div class="col-10">
+            <div className="col-10">
                 <Article/>
             </div>
         </div>
