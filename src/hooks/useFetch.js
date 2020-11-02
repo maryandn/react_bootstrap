@@ -28,7 +28,7 @@ export default (url) => {
                 }
             }
         }
-        console.log(requestOptions);
+        console.log(url + requestOptions);
         fetch(baseUrl + url, requestOptions)
             .then(response => response.json())
             .then(res => {
