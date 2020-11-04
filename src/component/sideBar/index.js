@@ -3,7 +3,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import useFetch from "../../hooks/useFetch";
 import Categories from "./categories";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AddCategory from "./addCategory";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,7 +32,7 @@ export default function NestedList() {
             aria-labelledby="nested-list-subheader"
             className={classes.root}
         >
-            <AddCategory/>
+            <AddCategory category_list={response}/>
             {(response !== null && !response.code) && response.map(category => <Categories
                 key={category.id}
                 category={category.name}
