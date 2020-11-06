@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import useFetch from "../../hooks/useFetch";
 import Categories from "./categories";
 import AddCategory from "./addCategory";
+import {CurrentUserContext} from "../../contexts/currentUser";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -16,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NestedList() {
+    const [state, ] = useContext(CurrentUserContext)
     const classes = useStyles();
 
     const apiUrl = '/categories/'
@@ -24,7 +27,7 @@ export default function NestedList() {
 
     useEffect(() => {
         doFetch({method: 'GET'})
-    }, [])
+    }, [state.editCategory])
 
     return (
         <List

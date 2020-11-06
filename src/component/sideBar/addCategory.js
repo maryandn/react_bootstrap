@@ -1,44 +1,32 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
-// const [state, setState] = useState({ fName: "", lName: "" });
-// const handleChange = e => {
-//     const { name, value } = e.target;
-//     setState(prevState => ({
-//         ...prevState,
-//         [name]: value
-//     }));
-// };
+import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function AddCategory(props) {
 
-    console.log(props.category_list)
-    const [doFetchMethod, setDoFetchMethod] = useState(true)
+    const [, setState] = useContext(CurrentUserContext)
+    const [doFetchMethod, setDoFetchMethod] = useState('')
+    console.log(doFetchMethod);
     const [category, setCategory] = useState({});
-
-    const apiUrl = doFetchMethod ? '/categories/' : `/categories/edit_category/${category.id}`
+    const apiUrl = doFetchMethod === 'POST' ? '/categories/' : `/categories/edit_category/${category.id}/`
     const [{isLoading, response}, doFetch] = useFetch(apiUrl)
-
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const name =
-        {
-            'name': category.name
-        }
+    useEffect(() => {
+        doFetchMethod !== '' && doFetch({method: doFetchMethod, body: JSON.stringify({name: category.name})})
+        setDoFetchMethod('')
+    }, [doFetchMethod])
 
-    const handleEditSubmit = (method) => {
-        console.log(method + name)
-        // doFetch({method: method, body: JSON.stringify(name)})
-    }
+    useEffect(() => {
+        response !== null && !response.error && setState(state => ({...state, editCategory: !state.editCategory}))
+    }, [response])
 
-    console.log(category.id)
-    console.log(category.name)
     return (
         <>
             {/*<Button variant="outline-secondary" onClick={handleShow}>*/}
@@ -63,25 +51,25 @@ export default function AddCategory(props) {
                         <Form.Group controlId="exampleForm.ControlSelect1">
                             <Form.Label>Выбрать Категорию</Form.Label>
                             <Form.Control as="select"
-                                          onChange={
-                                              event => setCategory(event.target.value)
-                                          }
+                                          onChange={(e => setCategory(props.category_list.find(item => item.id === +e.target.value)))}
                             >
-                                {(props.category_list !== null && !props.category_list.code) && props.category_list.map(category_list =>
-                                    <option key={category_list.id} value={category_list}>
-                                        {category_list.name}
+                                <option>
+                                    {category.name}
+                                </option>
+                                {(props.category_list !== null && !props.category_list.code) && props.category_list.map(category_item =>
+                                    <option key={category_item.id} value={category_item.id}>
+                                        {category_item.name}
                                     </option>
                                 )}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formBasicLogin">
                             <Form.Label>Category</Form.Label>
-                            <Form.Control type="login"
-                                          name="login"
-                                          placeholder="Логин"
+                            <Form.Control type="category"
+                                          name="category"
+                                          placeholder="Category"
                                           value={category.name}
-                                          onChange={event => setCategory(event.target.value)}
-
+                                          onChange={(event) => setCategory({...category, name: event.target.value})}
                             />
                         </Form.Group>
                     </Form>
@@ -92,7 +80,7 @@ export default function AddCategory(props) {
                     </Button>
                     <button className="btn btn-primary"
                             type="button"
-                            onClick={handleEditSubmit('DELETE')}
+                            onClick={() => setDoFetchMethod('DELETE')}
                     >
                         {
                             isLoading ?
@@ -104,7 +92,7 @@ export default function AddCategory(props) {
                     </button>
                     <button className="btn btn-primary"
                             type="button"
-                            onClick={handleEditSubmit('PUT')}
+                            onClick={() => setDoFetchMethod('PUT')}
                     >
                         {
                             isLoading ?
@@ -116,7 +104,7 @@ export default function AddCategory(props) {
                     </button>
                     <button className="btn btn-primary"
                             type="button"
-                            onClick={handleEditSubmit('POST')}
+                            onClick={() => setDoFetchMethod('POST')}
                     >
                         {
                             isLoading ?
@@ -125,6 +113,7 @@ export default function AddCategory(props) {
                                 : ''
                         }
                         {isLoading ? 'Loading...' : 'Добавить'}
+
                     </button>
                 </Modal.Footer>
             </Modal>

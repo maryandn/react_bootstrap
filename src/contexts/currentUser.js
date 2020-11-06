@@ -8,7 +8,8 @@ export const CurrentUserProvider = ({children}) => {
     const [state, setState] = useState({
         isLoading: false,
         isLoggedIn: false,
-        subCategoryId: null
+        subCategoryId: null,
+        editCategory: false
     })
 
     return (
