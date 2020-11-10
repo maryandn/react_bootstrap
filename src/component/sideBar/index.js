@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import useFetch from "../../hooks/useFetch";
 import Categories from "./categories";
-import AddCategory from "./addCategory";
+import EditCategory from "./editCategory";
 import {CurrentUserContext} from "../../contexts/currentUser";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,7 @@ export default function NestedList() {
             aria-labelledby="nested-list-subheader"
             className={classes.root}
         >
-            <AddCategory category_list={response}/>
+            <EditCategory category_list={response}/>
             {(response !== null && !response.code) && response.map(category => <Categories
                 key={category.id}
                 category={category.name}

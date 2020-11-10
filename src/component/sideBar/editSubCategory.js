@@ -1,59 +1,68 @@
 import React, {useContext, useEffect, useState} from "react";
-import Button from "react-bootstrap/Button";
+import useFetch from "../../hooks/useFetch";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import useFetch from "../../hooks/useFetch";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Button from "react-bootstrap/Button";
 import {CurrentUserContext} from "../../contexts/currentUser";
 
-export default function AddCategory(props) {
 
-    const [, setState] = useContext(CurrentUserContext)
+export default function EditSubCategory(props){
+
+    const [state, setState] = useContext(CurrentUserContext)
     const [doFetchMethod, setDoFetchMethod] = useState('')
-    const [category, setCategory] = useState({name: ''})
+    const [subCategory, setSubCategory] = useState({name: ''})
     const [categoryStatus, setCategoryStatus] = useState(false);
     const [apiUrl, setApiUrl] = useState('')
     const [{isLoading, response}, doFetch] = useFetch(apiUrl)
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setSubCategory({name: ''})
+    }
     const handleShow = () => setShow(true);
 
+    console.log(state.editSubCategory);
     const urlManager = () => {
         if (doFetchMethod === 'POST') {
-            setApiUrl('/categories/')
+            setApiUrl(`/categories/sub_categories/${props.id}/`)
         } else {
-            return setApiUrl(`/categories/edit_category/${category && category.id}/`)
+            return setApiUrl(`/categories/edit_sub_categories/${subCategory && subCategory.id}/`)
         }
     }
 
     const onChangeCategory = (e) => {
         if (e.target.value) {
-            setCategory(props.category_list.find(item => item.id === +e.target.value))
+            setSubCategory(props.sub_category_list.find(item => item.id === +e.target.value))
             setCategoryStatus(false)
         } else {
-            setCategory({name: ''})
+            setSubCategory({...subCategory, name: ''})
             setCategoryStatus(true)
         }
     }
 
     const onHandleInput = (event) => {
-        setCategory({...category, name: event.target.value})
-        if (category) {
-            !category.id && setCategoryStatus(true)
+        setSubCategory({...subCategory, name: event.target.value})
+        if (subCategory) {
+            !subCategory.id && setCategoryStatus(true)
         }
     }
 
     useEffect(() => {
         if (doFetchMethod) {
             urlManager();
-            doFetch({method: doFetchMethod, body: JSON.stringify({name: category.name})})
+            doFetch({method: doFetchMethod, body: JSON.stringify({name: subCategory.name, categories: props.id})})
             setDoFetchMethod('')
+            setSubCategory({name: ''})
+            setCategoryStatus(true)
         }
     }, [doFetchMethod])
 
+
     useEffect(() => {
-        response !== null && !response.error && setState(state => ({...state, editCategory: !state.editCategory}))
+        response !== null && !response.error && setState(state => ({...state, editSubCategory: !state.editSubCategory}))
     }, [response])
+
 
     return (
         <>
@@ -84,7 +93,7 @@ export default function AddCategory(props) {
                                 <option>
                                     --------------
                                 </option>
-                                {(props.category_list !== null && !props.category_list.code) && props.category_list.map(category_item => (
+                                {(props.sub_category_list !== null && !props.sub_category_list.code) && props.sub_category_list.map(category_item => (
                                         <option key={category_item.id} value={category_item.id}>
                                             {category_item.name}
                                         </option>
@@ -97,7 +106,7 @@ export default function AddCategory(props) {
                             <Form.Control type="category"
                                           name="category"
                                           placeholder="Category"
-                                          value={category ? category.name : ''}
+                                          value={subCategory ? subCategory.name : ''}
                                           onChange={(e) => onHandleInput(e)}
                             />
                         </Form.Group>
@@ -107,9 +116,9 @@ export default function AddCategory(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    {category && category.id && <button className="btn btn-primary"
-                                         type="button"
-                                         onClick={() => setDoFetchMethod('DELETE')}
+                    {subCategory && subCategory.id && <button className="btn btn-primary"
+                                                        type="button"
+                                                        onClick={() => setDoFetchMethod('DELETE')}
                     >
                         {
                             isLoading ?
@@ -119,7 +128,7 @@ export default function AddCategory(props) {
                         }
                         {isLoading ? 'Loading...' : 'Удалить'}
                     </button>}
-                    {category && category.id && <button className="btn btn-primary"
+                    {subCategory && subCategory.id && <button className="btn btn-primary"
                                                         type="button"
                                                         onClick={() => setDoFetchMethod('PUT')}
                     >

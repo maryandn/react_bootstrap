@@ -9,7 +9,8 @@ export const CurrentUserProvider = ({children}) => {
         isLoading: false,
         isLoggedIn: false,
         subCategoryId: null,
-        editCategory: false
+        editCategory: false,
+        editSubCategory: false
     })
 
     return (

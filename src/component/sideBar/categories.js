@@ -1,16 +1,20 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import SubCategories from "./subCategories";
 import useFetch from "../../hooks/useFetch";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import EditSubCategory from "./editSubCategory";
+import {CurrentUserContext} from "../../contexts/currentUser";
 
 
 export default function Categories(props) {
-    const [open, setOpen] = React.useState(false);
+
+    const [state, ] = useContext(CurrentUserContext)
     const apiUrl = `/categories/sub_categories/${props.id}`
     const [{response}, doFetch] = useFetch(apiUrl)
+
+    const [open, setOpen] = React.useState(false);
 
     const handleClick = () => {
         setOpen(!open);
@@ -18,7 +22,7 @@ export default function Categories(props) {
 
     useEffect(() => {
         doFetch({method: 'GET'})
-    }, [])
+    }, [state.editSubCategory])
 
     return (
         <>
@@ -28,9 +32,7 @@ export default function Categories(props) {
             </ListItem>
             {
                 open &&
-                <button className='btn bg-dark text-light w-100'>
-                    <AddCircleOutlineIcon/>
-                </button>
+                <EditSubCategory sub_category_list={response} id={props.id}/>
             }
             {
                 (response !== null && !response.code) && response.map(sub_category => <SubCategories
