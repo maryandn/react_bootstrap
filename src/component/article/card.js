@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import {red} from '@material-ui/core/colors';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {FavoriteBorder} from "@material-ui/icons";
+import EditProduct from "./editProduct";
+import CardAddProduct from "./cardAddProduct";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,64 +54,67 @@ function CardList(props) {
     };
 
     return (
-        <Card className={classes.root} onMouseEnter={handleExpandClick} onMouseLeave={handleExpandClick}>
-            <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
-                {
-                    promotions && <IconButton aria-label="buy">
+        <>
+            <CardAddProduct />
+            <Card className={classes.root} onMouseEnter={handleExpandClick} onMouseLeave={handleExpandClick}>
+                <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
+                    {
+                        promotions && <IconButton aria-label="buy">
+                            <FavoriteBorder/>
+                        </IconButton>
+                    }
+                    <IconButton aria-label="buy">
                         <FavoriteBorder/>
                     </IconButton>
-                }
-                <IconButton aria-label="buy">
-                    <FavoriteBorder/>
-                </IconButton>
-            </CardActions>
-            <CardMedia
-                className={classes.media}
-                image={urlImg + urlImgResponse}
-                title="Paella dish"
-            />
-            <IconButton>
-                <div className='mb-3'
-                     style={{
-                         backgroundColor: color,
-                         border: '1px solid black',
-                         width: '20px', height: '20px'
-                     }}
+                </CardActions>
+                <CardMedia
+                    className={classes.media}
+                    image={urlImg + urlImgResponse}
+                    title="Paella dish"
                 />
-            </IconButton>
-            <CardContent className='py-0'>
-                <Typography variant="body2" color="textSecondary" component="p">
-                    {brand + ' ' + name}
-                </Typography>
-            </CardContent>
-            <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
-                <Typography color='error'>{price}₴</Typography>
-
-                <IconButton aria-label="buy">
-                    <ShoppingCartIcon/>
+                <IconButton>
+                    <div className='mb-3'
+                         style={{
+                             backgroundColor: color,
+                             border: '1px solid black',
+                             width: '20px', height: '20px'
+                         }}
+                    />
                 </IconButton>
-            </CardActions>
-            <CardActions className='py-0' disableSpacing>
-                <Typography className='text-success'>{quantity > 5 &&
-                <small className="text-success">Есть в наличии</small>}
-                    {quantity <= 5 && quantity > 0 &&
-                    <small className="text-warning">Заканчивается</small>}
-                    {quantity < 1 &&
-                    <small className="text-danger">Нет в наличии</small>}</Typography>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <Typography gutterBottom>Method:</Typography>
-                    <Typography paragraph>
-                        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                        minutes.
-                    </Typography>
-                    <Typography>
-                        Set aside off of the heat to let rest for 10 minutes, and then serve.
+                <CardContent className='py-0'>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {brand + ' ' + name}
                     </Typography>
                 </CardContent>
-            </Collapse>
-        </Card>
+                <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
+                    <Typography color='error'>{price}₴</Typography>
+
+                    <IconButton aria-label="buy">
+                        <ShoppingCartIcon/>
+                    </IconButton>
+                </CardActions>
+                <CardActions className='py-0' disableSpacing>
+                    <Typography className='text-success'>{quantity > 5 &&
+                    <small className="text-success">Есть в наличии</small>}
+                        {quantity <= 5 && quantity > 0 &&
+                        <small className="text-warning">Заканчивается</small>}
+                        {quantity < 1 &&
+                        <small className="text-danger">Нет в наличии</small>}</Typography>
+                </CardActions>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                        <Typography gutterBottom>Method:</Typography>
+                        <Typography paragraph>
+                            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
+                            minutes.
+                        </Typography>
+                        <Typography>
+                            Set aside off of the heat to let rest for 10 minutes, and then serve.
+                        </Typography>
+                    </CardContent>
+                </Collapse>
+            </Card>
+        </>
     )
 }
 
