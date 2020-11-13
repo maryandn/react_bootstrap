@@ -11,7 +11,7 @@ export default (url) => {
         setOptions(options)
         setIsLoading(true)
         setResponse(null)
-    }, [])
+    }, [options])
 
     useEffect(() => {
 

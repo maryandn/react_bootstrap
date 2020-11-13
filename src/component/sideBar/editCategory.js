@@ -105,6 +105,7 @@ export default function EditCategory(props) {
                                           value={category ? category.name : ''}
                                           onChange={(e) => onHandleInput(e)}
                             />
+                            <input type="text"/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

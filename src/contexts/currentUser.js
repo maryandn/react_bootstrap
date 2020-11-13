@@ -10,7 +10,9 @@ export const CurrentUserProvider = ({children}) => {
         isLoggedIn: false,
         subCategoryId: null,
         editCategory: false,
-        editSubCategory: false
+        editSubCategory: false,
+        setPropertiesBrand: {},
+        setPropertiesColor: {}
     })
 
     return (

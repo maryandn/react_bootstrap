@@ -1,13 +1,19 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import GetBrands from "./getBrands";
-import GetColors from "./getColors";
+import GetProperties from "./getProperties";
+import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function EditProduct() {
 
+    const [state,] = useContext(CurrentUserContext)
     const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        console.log(state.setPropertiesBrand.id)
+        console.log(state.setPropertiesColor.id)
+    }, [state.setPropertiesBrand, state.setPropertiesColor])
 
     const handleClose = () => {
         setShow(false)
@@ -17,9 +23,10 @@ export default function EditProduct() {
     return (
         <>
             <button className='btn bg-dark text-light w-100' onClick={handleShow}>
-                <AddCircleOutlineIcon/>
+                <AddCircleOutlineIcon />
             </button>
             <Modal
+                size="lg"
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
@@ -32,10 +39,12 @@ export default function EditProduct() {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group controlId="exampleForm.ControlSelect1">
-                            <GetBrands/>
-                            <GetColors/>
-                        </Form.Group>
+                        <Form.Row>
+                            <GetProperties properties={'Бренд'} url={'brand/'}/>
+                        </Form.Row>
+                        <Form.Row>
+                            <GetProperties properties={'Цвет'} url={'color/'}/>
+                        </Form.Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

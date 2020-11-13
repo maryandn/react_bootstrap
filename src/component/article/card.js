@@ -11,7 +11,6 @@ import {red} from '@material-ui/core/colors';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {FavoriteBorder} from "@material-ui/icons";
 import EditProduct from "./editProduct";
-import CardAddProduct from "./cardAddProduct";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,7 +54,7 @@ function CardList(props) {
 
     return (
         <>
-            <CardAddProduct />
+            <EditProduct />
             <Card className={classes.root} onMouseEnter={handleExpandClick} onMouseLeave={handleExpandClick}>
                 <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
                     {
