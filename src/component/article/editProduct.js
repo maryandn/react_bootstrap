@@ -4,16 +4,21 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import GetProperties from "./getProperties";
 import {CurrentUserContext} from "../../contexts/currentUser";
+// import useFetch from "../../hooks/useFetch";
 
 export default function EditProduct() {
 
     const [state,] = useContext(CurrentUserContext)
+    const [reloadProperties, setReloadProperties] = useState(false)
+    // const apiUrl = `/product/`
+    // const [{isLoading, response}, doFetch] = useFetch(apiUrl)
     const [show, setShow] = useState(false);
 
+    console.log('+++++++++',reloadProperties)
+
     useEffect(() => {
-        console.log(state.setPropertiesBrand.id)
-        console.log(state.setPropertiesColor.id)
-    }, [state.setPropertiesBrand, state.setPropertiesColor])
+        setReloadProperties(!reloadProperties)
+    }, [state.setProperties])
 
     const handleClose = () => {
         setShow(false)
@@ -48,20 +53,6 @@ export default function EditProduct() {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    {/*{categoryStatus && <button className="btn btn-primary"*/}
-                    {/*                           type="button"*/}
-                    {/*                           onClick={() => setDoFetchMethod('POST')}*/}
-                    {/*>*/}
-                    {/*    {*/}
-                    {/*        isLoading ?*/}
-                    {/*            <span className="spinner-border spinner-border-sm" role="status"*/}
-                    {/*                  aria-hidden="true"></span>*/}
-                    {/*            : ''*/}
-                    {/*    }*/}
-                    {/*    {isLoading ? 'Loading...' : 'Добавить'}*/}
-
-                    {/*</button>*/}
-                    {/*}*/}
                     <button className="btn btn-primary" type="button">
                         Добавить
                     </button>

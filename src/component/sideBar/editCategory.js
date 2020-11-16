@@ -62,9 +62,6 @@ export default function EditCategory(props) {
 
     return (
         <>
-            {/*<Button variant="outline-secondary" onClick={handleShow}>*/}
-            {/*    <AddCircleOutlineIcon/>*/}
-            {/*</Button>*/}
             <button className='btn bg-dark text-light w-100' onClick={handleShow}>
                 <AddCircleOutlineIcon/>
             </button>
