@@ -22,7 +22,6 @@ export default function EditSubCategory(props){
     }
     const handleShow = () => setShow(true);
 
-    console.log(state.editSubCategory);
     const urlManager = () => {
         if (doFetchMethod === 'POST') {
             setApiUrl(`/categories/sub_categories/${props.id}/`)
@@ -66,9 +65,6 @@ export default function EditSubCategory(props){
 
     return (
         <>
-            {/*<Button variant="outline-secondary" onClick={handleShow}>*/}
-            {/*    <AddCircleOutlineIcon/>*/}
-            {/*</Button>*/}
             <button className='btn bg-dark text-light w-100' onClick={handleShow}>
                 <AddCircleOutlineIcon/>
             </button>

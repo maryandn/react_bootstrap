@@ -11,13 +11,19 @@ export default function AddProperties(props) {
     const apiUrl = `/product/${props.propsUrl}`
     const [{isLoading, response}, doFetch] = useFetch(apiUrl)
     const [valueState, setValueState] = useState('')
-    const valueRef = useRef()
+    const valueRef = useRef('')
 
     useEffect(() => {
-        doFetch({method: 'POST', body: JSON.stringify({name: valueState})})
+        if (valueState){
+            doFetch({method: 'POST', body: JSON.stringify({name: valueState})})
+            setValueState('')
+        }
+    }, [valueState])
+
+    useEffect(()=>{
         valueRef.current.value = ''
         setState(state => ({...state, setProperties: !state.setProperties}))
-    }, [valueState])
+    }, [response])
 
     const submitButton = () => {
         setValueState(valueRef.current.value)

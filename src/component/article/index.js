@@ -3,7 +3,7 @@ import CardList from "./card";
 import useFetch from "../../hooks/useFetch";
 import {CurrentUserContext} from "../../contexts/currentUser";
 import {Row} from "react-bootstrap";
-import EditProduct from "./editProduct";
+import AddProduct from "./addProduct";
 
 export default function Article() {
 
@@ -19,7 +19,7 @@ export default function Article() {
     return (
         <Row lg={4} md={2} sm={1}>
             {
-                response !== null && <EditProduct />
+                response !== null && <AddProduct />
             }
             {
                 response !== null && response.map(product =>
