@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import useFetch from "../../hooks/useFetch";
 import {CurrentUserContext} from "../../contexts/currentUser";
+import AddInput from "../global/addInput";
 
 export default function AddProperties(props) {
 
@@ -14,13 +15,13 @@ export default function AddProperties(props) {
     const valueRef = useRef('')
 
     useEffect(() => {
-        if (valueState){
+        if (valueState) {
             doFetch({method: 'POST', body: JSON.stringify({name: valueState})})
             setValueState('')
         }
     }, [valueState])
 
-    useEffect(()=>{
+    useEffect(() => {
         valueRef.current.value = ''
         setState(state => ({...state, setProperties: !state.setProperties}))
     }, [response])
@@ -34,13 +35,9 @@ export default function AddProperties(props) {
             <Col xs={5}>
                 <Form.Group>
                     <Form.Label size="sm">Название {props.propsSpecification}</Form.Label>
-                    <div className="input-group mb-3">
-                        <input className="form-control"
-                               ref={valueRef}
-                               placeholder= {`Ведите название ${props.propsSpecification}a`}
-                        >
-                        </input>
-                    </div>
+                    <AddInput forwardRef={valueRef}
+                              placeholder={`Ведите название ${props.propsSpecification}a`}
+                    />
                 </Form.Group>
             </Col>
             <Col>

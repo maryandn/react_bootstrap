@@ -11,9 +11,8 @@ export const CurrentUserProvider = ({children}) => {
         subCategoryId: null,
         editCategory: false,
         editSubCategory: false,
+        editCardProduct: false,
         setProperties: false,
-        setPropertiesBrand: {},
-        setPropertiesColor: {}
     })
 
     return (

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from "react";
-import CardList from "./card";
+import CardList from "./cardList";
 import useFetch from "../../hooks/useFetch";
 import {CurrentUserContext} from "../../contexts/currentUser";
 import {Row} from "react-bootstrap";
@@ -14,12 +14,12 @@ export default function Article() {
 
     useEffect(()=>{
         state.subCategoryId && doFetch({method: 'GET'})
-    }, [state.subCategoryId])
+    }, [state.subCategoryId, state.editCardProduct])
 
     return (
         <Row lg={4} md={2} sm={1}>
             {
-                response !== null && <AddProduct />
+                response !== null && <AddProduct subCategoryId={state.subCategoryId}/>
             }
             {
                 response !== null && response.map(product =>
