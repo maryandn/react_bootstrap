@@ -1,15 +1,17 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import {CurrentUserContext} from "../../contexts/currentUser";
+import AddInput from "../global/addInput";
 
 export default function EditCategory(props) {
 
     const [, setState] = useContext(CurrentUserContext)
     const [doFetchMethod, setDoFetchMethod] = useState('')
+    // const refCategory = useRef('')
     const [category, setCategory] = useState({name: ''})
     const [categoryStatus, setCategoryStatus] = useState(false);
     const [apiUrl, setApiUrl] = useState('')
@@ -50,14 +52,14 @@ export default function EditCategory(props) {
         if (doFetchMethod) {
             urlManager();
             doFetch({method: doFetchMethod, body: JSON.stringify({name: category.name})})
-            setDoFetchMethod('')
-            setCategory({name: ''})
-            setCategoryStatus(true)
         }
     }, [doFetchMethod])
 
     useEffect(() => {
         response !== null && !response.error && setState(state => ({...state, editCategory: !state.editCategory}))
+        setDoFetchMethod('')
+        setCategory({name: ''})
+        setCategoryStatus(true)
     }, [response])
 
     return (
@@ -102,7 +104,7 @@ export default function EditCategory(props) {
                                           value={category ? category.name : ''}
                                           onChange={(e) => onHandleInput(e)}
                             />
-                            <input type="text"/>
+                            {/*<AddInput forwardRef={refCategory} placeholder='Category'/>*/}
                         </Form.Group>
                     </Form>
                 </Modal.Body>

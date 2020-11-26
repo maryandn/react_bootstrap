@@ -7,9 +7,10 @@ import Col from "react-bootstrap/Col";
 import AddInput from "../global/addInput";
 import AddImg from "../global/addImg";
 import useFetch from "../../hooks/useFetch";
-import Card from "@material-ui/core/Card";
 import {makeStyles} from "@material-ui/core/styles";
 import {CurrentUserContext} from "../../contexts/currentUser";
+import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,20 +23,22 @@ const useStyles = makeStyles((theme) => ({
     },
     addButton: {
         fontSize: 140,
-        marginTop: '49.5%',
-        marginBottom: '49.5%',
+        alignItems: 'center',
     }
 }));
 
 function AddProduct(props) {
 
-    const [, setState] = useContext(CurrentUserContext)
+    const {id, brand, color, name, price, quantity} = props.specifications
 
-    const apiUrl = `/product/${props.subCategoryId}`
+    const [state, setState] = useContext(CurrentUserContext)
+
+    const apiUrl = props.action ? `/product/${props.subCategoryId}` : `/product/change_product/${id}`
+    const method = props.action ? 'POST' : 'PUT'
     const [{response}, doFetch] = useFetch(apiUrl)
 
     const [img, setImg] = useState('')
-    
+
     const refBrand = useRef()
     const refColor = useRef()
     const refModel = useRef('')
@@ -45,23 +48,29 @@ function AddProduct(props) {
     const classes = useStyles();
     const [show, setShow] = useState(false);
 
-    const handleClose = () => {
-        setShow(false)
-    }
+    const handleClose = () => setShow(false)
     const handleShow = () => setShow(true);
 
     const addProductButton = () => {
         const random = Math.round(Math.random() * 10)
         const formData = new FormData()
-        formData.append('brand', refBrand.current.value)
-        formData.append('color', refColor.current.value)
-        formData.append('name', refModel.current.value)
-        formData.append('price', refPrice.current.value)
-        formData.append('quantity', refQuantity.current.value)
-        formData.append('img', img)
-        formData.append('code', random)
-
-        doFetch({method: 'POST', body: formData})
+        if (props.action) {
+            formData.append('brand', refBrand.current.value)
+            formData.append('color', refColor.current.value)
+            formData.append('name', refModel.current.value)
+            formData.append('price', refPrice.current.value)
+            formData.append('quantity', refQuantity.current.value)
+            formData.append('img', img)
+            formData.append('code', random)
+        } else {
+            refBrand.current.value !== 'Choose...' && formData.append('brand', refBrand.current.value)
+            refColor.current.value !== 'Choose...' && formData.append('color', refColor.current.value)
+            formData.append('name', refModel.current.value)
+            formData.append('price', refPrice.current.value)
+            formData.append('quantity', refQuantity.current.value)
+            img && formData.append('img', img)
+        }
+        doFetch({method: method, body: formData})
     }
 
     useEffect(() => {
@@ -71,10 +80,21 @@ function AddProduct(props) {
     }, [response])
 
     return (
-        <div className="h-100 pr-1 pt-2">
-            <Card className={classes.root} onClick={handleShow}>
-                <AddCircleOutlineIcon className={classes.addButton} color="disabled"/>
-            </Card>
+        <>
+
+            {
+                props.action === true ?
+                    <div className="h-200 d-flex justify-content-center align-items-center" onClick={handleShow}>
+                        <AddCircleOutlineIcon className={classes.addButton} color="disabled"/>
+                    </div>
+                    :
+                    <div>
+                        <IconButton aria-label="buy" onClick={handleShow}>
+                            <EditIcon/>
+                        </IconButton>
+                    </div>
+            }
+
             <Modal
                 size="lg"
                 show={show}
@@ -84,29 +104,46 @@ function AddProduct(props) {
             >
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Add Product
+                        {`продукт из категории ${state.subCategoryName}`}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Row>
-                            <GetProperties forwardRef={refBrand} properties={'Бренд'} url={'brand/'}/>
+                            <GetProperties forwardRef={refBrand}
+                                           properties={'Бренд'}
+                                           url={'brand/'}
+                                           defaultValue={brand}
+                            />
                         </Form.Row>
                         <Form.Row>
-                            <GetProperties forwardRef={refColor} properties={'Цвет'} url={'color/'}/>
+                            <GetProperties forwardRef={refColor}
+                                           properties={'Цвет'}
+                                           url={'color/'}
+                                           defaultValue={color}
+                            />
                         </Form.Row>
                         <Form.Row>
                             <Col xs={4}>
                                 <Form.Label size="sm">Введите Модель</Form.Label>
-                                <AddInput forwardRef={refModel} placeholder='Поле ввода'/>
+                                <AddInput forwardRef={refModel}
+                                          placeholder='Поле ввода'
+                                          defaultValue={name}
+                                />
                             </Col>
                             <Col xs={4}>
                                 <Form.Label size="sm">Введите Цену </Form.Label>
-                                <AddInput forwardRef={refPrice} placeholder='Поле ввода'/>
+                                <AddInput forwardRef={refPrice}
+                                          placeholder='Поле ввода'
+                                          defaultValue={price}
+                                />
                             </Col>
                             <Col xs={4}>
                                 <Form.Label size="sm">Введите Количество </Form.Label>
-                                <AddInput forwardRef={refQuantity} placeholder='Поле ввода'/>
+                                <AddInput forwardRef={refQuantity}
+                                          placeholder='Поле ввода'
+                                          defaultValue={quantity}
+                                />
                             </Col>
                         </Form.Row>
                         <Form.Group>
@@ -120,11 +157,11 @@ function AddProduct(props) {
                             type="button"
                             onClick={addProductButton}
                     >
-                        Добавить
+                        {props.action ? 'Добавить' : 'Изменить'}
                     </button>
                 </Modal.Footer>
             </Modal>
-        </div>
+        </>
     )
 }
 

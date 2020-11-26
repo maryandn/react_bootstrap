@@ -10,7 +10,7 @@ export default function Article() {
     const [state] = useContext(CurrentUserContext)
 
     const apiUrl = `/product/${state.subCategoryId}`
-    const [{isLoading, response}, doFetch] = useFetch(apiUrl)
+    const [{response}, doFetch] = useFetch(apiUrl)
 
     useEffect(()=>{
         state.subCategoryId && doFetch({method: 'GET'})
@@ -19,7 +19,7 @@ export default function Article() {
     return (
         <Row lg={4} md={2} sm={1}>
             {
-                response !== null && <AddProduct subCategoryId={state.subCategoryId}/>
+                response !== null && <AddProduct action={true} specifications subCategoryId={state.subCategoryId}/>
             }
             {
                 response !== null && response.map(product =>

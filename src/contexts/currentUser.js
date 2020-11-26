@@ -9,6 +9,7 @@ export const CurrentUserProvider = ({children}) => {
         isLoading: false,
         isLoggedIn: false,
         subCategoryId: null,
+        subCategoryName: '',
         editCategory: false,
         editSubCategory: false,
         editCardProduct: false,

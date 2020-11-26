@@ -51,15 +51,15 @@ export default function EditSubCategory(props){
         if (doFetchMethod) {
             urlManager();
             doFetch({method: doFetchMethod, body: JSON.stringify({name: subCategory.name, categories: props.id})})
-            setDoFetchMethod('')
-            setSubCategory({name: ''})
-            setCategoryStatus(true)
         }
     }, [doFetchMethod])
 
 
     useEffect(() => {
         response !== null && !response.error && setState(state => ({...state, editSubCategory: !state.editSubCategory}))
+        setDoFetchMethod('')
+        setSubCategory({name: ''})
+        setCategoryStatus(true)
     }, [response])
 
 

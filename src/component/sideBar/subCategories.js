@@ -25,7 +25,8 @@ export default function SubCategories(props) {
     const onClickId = () => {
         setState(state => ({
             ...state,
-            subCategoryId: props.id
+            subCategoryId: props.id,
+            subCategoryName: props.sub_category
         }))
 
     }

@@ -13,12 +13,13 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {FavoriteBorder} from "@material-ui/icons";
 import useFetch from "../../hooks/useFetch";
 import {CurrentUserContext} from "../../contexts/currentUser";
+import AddProduct from "./addProduct";
+import clsx from "clsx";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 345,
-        position: 'relative',
-        zIndex: 100
     },
     media: {
         height: 0,
@@ -27,14 +28,12 @@ const useStyles = makeStyles((theme) => ({
     expand: {
         transform: 'rotate(0deg)',
         marginLeft: 'auto',
-        position: 'absolute',
         transition: theme.transitions.create('transform', {
             duration: theme.transitions.duration.shortest,
         }),
     },
     expandOpen: {
         transform: 'rotate(180deg)',
-        position: 'absolute'
     },
     avatar: {
         backgroundColor: red[500],
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CardList(props) {
 
-    const [state, setState] = useContext(CurrentUserContext)
+    const [, setState] = useContext(CurrentUserContext)
 
     const idProduct = props.specifications.id
     const urlImg = 'http://127.0.0.1:8000'
@@ -58,7 +57,7 @@ function CardList(props) {
     const [expanded, setExpanded] = React.useState(false);
 
     const apiUrl = `/product/change_product/${idProduct}`
-    const [{isLoading, response}, doFetch] = useFetch(apiUrl)
+    const [{response}, doFetch] = useFetch(apiUrl)
 
     const deleteButton = () => {
         doFetch({method: 'DELETE'})
@@ -76,7 +75,7 @@ function CardList(props) {
 
     return (
         <div className="pr-1 pt-2">
-            <Card className={classes.root} onMouseEnter={handleExpandClick} onMouseLeave={handleExpandClick}>
+            <Card className={classes.root}>
                 <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
                     {
                         promotions && <IconButton aria-label="buy">
@@ -86,9 +85,12 @@ function CardList(props) {
                     <IconButton aria-label="buy">
                         <FavoriteBorder/>
                     </IconButton>
-                    <IconButton aria-label="buy" onClick={deleteButton}>
-                        <DeleteForeverIcon/>
-                    </IconButton>
+                    <div className="d-flex justify-content-between">
+                        <AddProduct action={false} specifications={props.specifications}/>
+                        <IconButton aria-label="buy" onClick={deleteButton}>
+                            <DeleteForeverIcon/>
+                        </IconButton>
+                    </div>
                 </CardActions>
                 <CardMedia
                     className={classes.media}
@@ -114,6 +116,16 @@ function CardList(props) {
 
                     <IconButton aria-label="buy">
                         <ShoppingCartIcon/>
+                    </IconButton>
+                    <IconButton
+                        className={clsx(classes.expand, {
+                            [classes.expandOpen]: expanded,
+                        })}
+                        onClick={handleExpandClick}
+                        aria-expanded={expanded}
+                        aria-label="show more"
+                    >
+                        <ExpandMoreIcon />
                     </IconButton>
                 </CardActions>
                 <CardActions className='py-0' disableSpacing>

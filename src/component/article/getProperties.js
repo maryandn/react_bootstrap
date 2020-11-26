@@ -5,12 +5,12 @@ import {CurrentUserContext} from "../../contexts/currentUser";
 import Col from "react-bootstrap/Col";
 import AddProperties from "./addProperties";
 
-export default function GetProperties({forwardRef, url, properties}) {
+export default function GetProperties({forwardRef, url, properties, defaultValue}) {
 
     const [state, ] = useContext(CurrentUserContext)
     const [defaultOptions, setDefaultOptions] = useState(true)
     const apiUrl = `/product/${url}`
-    const [{isLoading, response}, doFetch] = useFetch(apiUrl)
+    const [{response}, doFetch] = useFetch(apiUrl)
 
     const onSelectProperties = (e) => {
         setDefaultOptions(false)
@@ -34,7 +34,8 @@ export default function GetProperties({forwardRef, url, properties}) {
                         custom
                     >
                         {
-                            defaultOptions ? <option>Choose...</option> : ''
+                            // defaultOptions ? <option defaultValue={defaultValue}>Choose...</option> : ''
+                            defaultOptions ? <option defaultValue={defaultValue}>Choose...</option> : ''
                         }
                         {(response !== null && !response.code) && response.map(properties_item => (
                                 <option key={properties_item.id}
