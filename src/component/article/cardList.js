@@ -16,6 +16,7 @@ import {CurrentUserContext} from "../../contexts/currentUser";
 import AddProduct from "./addProduct";
 import clsx from "clsx";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -92,11 +93,15 @@ function CardList(props) {
                         </IconButton>
                     </div>
                 </CardActions>
-                <CardMedia
-                    className={classes.media}
-                    image={urlImg + urlImgResponse}
-                    title="Paella dish"
-                />
+                <Link to="/product_page">
+                    <div>
+                        <CardMedia
+                            className={classes.media}
+                            image={urlImg + urlImgResponse}
+                            title="Paella dish"
+                        />
+                    </div>
+                </Link>
                 <IconButton>
                     <div className='mb-3'
                          style={{
@@ -125,7 +130,7 @@ function CardList(props) {
                         aria-expanded={expanded}
                         aria-label="show more"
                     >
-                        <ExpandMoreIcon />
+                        <ExpandMoreIcon/>
                     </IconButton>
                 </CardActions>
                 <CardActions className='py-0' disableSpacing>

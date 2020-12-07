@@ -37,6 +37,7 @@ export default function GetProperties({forwardRef, url, properties, defaultValue
                             // defaultOptions ? <option defaultValue={defaultValue}>Choose...</option> : ''
                             defaultOptions ? <option defaultValue={defaultValue}>Choose...</option> : ''
                         }
+                        <option value={defaultValue}>brand</option>
                         {(response !== null && !response.code) && response.map(properties_item => (
                                 <option key={properties_item.id}
                                         value={properties_item.id}

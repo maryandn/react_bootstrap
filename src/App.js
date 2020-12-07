@@ -8,9 +8,8 @@ import Routes from './routes'
 function App() {
   return (
     <div>
-        {/*<Test/>*/}
       <TopBar/>
-        <Routes/>
+      <Routes/>
     </div>
   );
 }
