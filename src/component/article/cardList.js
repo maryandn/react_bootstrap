@@ -1,4 +1,5 @@
 import React, {memo, useContext, useEffect} from 'react';
+
 import {makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -17,6 +18,9 @@ import AddProduct from "./addProduct";
 import clsx from "clsx";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {productAction} from "../../redux/actions/product-action";
+import {cartAddAction} from "../../redux/actions/cart-action";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,8 +47,11 @@ const useStyles = makeStyles((theme) => ({
 
 function CardList(props) {
 
+    const dispatch = useDispatch()
+
     const [, setState] = useContext(CurrentUserContext)
 
+    console.log(props);
     const idProduct = props.specifications.id
     const urlImg = 'http://127.0.0.1:8000'
     const urlImgResponse = props.specifications.img
@@ -93,7 +100,8 @@ function CardList(props) {
                         </IconButton>
                     </div>
                 </CardActions>
-                <Link to="/product_page">
+                <Link to={`/product/get_product/${idProduct}`}
+                      onClick={()=> dispatch(productAction(`product/get_product/${idProduct}`))}>
                     <div>
                         <CardMedia
                             className={classes.media}
@@ -119,7 +127,7 @@ function CardList(props) {
                 <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
                     <Typography color='error'>{price}₴</Typography>
 
-                    <IconButton aria-label="buy">
+                    <IconButton aria-label="buy" onClick={()=>{dispatch(cartAddAction(props.specifications))}}>
                         <ShoppingCartIcon/>
                     </IconButton>
                     <IconButton

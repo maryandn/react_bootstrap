@@ -4,6 +4,9 @@ import AuthForm from "./authForm";
 import Button from "react-bootstrap/Button";
 import {CurrentUserContext} from "../../contexts/currentUser";
 import useFetch from "../../hooks/useFetch";
+import {Link} from "react-router-dom";
+import Cart from "./cart";
+import Form from "./Form";
 
 function TopBar() {
 
@@ -12,7 +15,6 @@ function TopBar() {
     const apiUrl = tokenValid ? '/user' : '/token/refresh/'
     const [{response}, doFetch] = useFetch(apiUrl)
     const token = localStorage.getItem('token')
-
 
     const handleSubmitLogOut = () => {
         localStorage.clear()
@@ -51,13 +53,28 @@ function TopBar() {
         if ( apiUrl === '/token/refresh/' && response !== null && response.code){
             handleSubmitLogOut()
         }
+
+        if (response !== null){
+            console.log(response.id);
+            setState(state => ({
+                ...state,
+                userId: response.id
+            }))
+        }
     }, [response])
 
     return (
         <Navbar bg="dark" variant="dark">
-            <Navbar.Brand href="#home">Super Shop</Navbar.Brand>
+            <Link  to={'/'}>
+                <Navbar.Brand>Super Shop</Navbar.Brand>
+            </Link>
             <Navbar.Toggle/>
             <Navbar.Collapse className="justify-content-end">
+                {
+                    <div>
+                        <Form/>
+                    </div>
+                }
                 {
                     state.isLoggedIn ?
                         <Navbar.Text>
@@ -74,6 +91,9 @@ function TopBar() {
                     >
                         Log Out
                     </Button>
+                }
+                {
+                    <Cart/>
                 }
 
             </Navbar.Collapse>

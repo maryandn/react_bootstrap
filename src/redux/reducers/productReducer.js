@@ -1,7 +1,22 @@
 import {GET_PRODUCT} from "../types";
 
 const initialState  = {
-    product: {}
+    product: {
+        "id": null,
+        "name": "",
+        "code": null,
+        "price": null,
+        "quantity": null,
+        "img": "",
+        "brand": {
+            "id": null,
+            "name": ""
+        },
+        "color": {
+            "id": null,
+            "name": ""
+        }
+    }
 }
 
 export const productReducer = (state = initialState, action) => {

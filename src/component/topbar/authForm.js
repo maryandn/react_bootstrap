@@ -3,13 +3,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import useFetch from "../../hooks/useFetch";
-import {useForm} from "react-hook-form";
-import IntlTelInput from 'react-bootstrap-intl-tel-input'
 import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function AuthForm() {
-
-    const {handleSubmit, register, errors} = useForm();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -101,14 +97,14 @@ export default function AuthForm() {
                                           placeholder="Логин"
                                           value={username}
                                           onChange={event => setUsername(event.target.value)}
-                                          ref={register({
-                                              required: 'логин не может быть пустой',
-                                              minLength: 5,
-                                              maxLength: 20
-                                          })}
+                                          // ref={register({
+                                          //     required: 'логин не может быть пустой',
+                                          //     minLength: 5,
+                                          //     maxLength: 20
+                                          // })}
                             />
                             <Form.Text className="text-muted">
-                                {errors.login && <span className="text-danger">{errors.login.message}</span>}
+                                {/*{errors.login && <span className="text-danger">{errors.login.message}</span>}*/}
                             </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="formBasicPassword">
@@ -118,20 +114,20 @@ export default function AuthForm() {
                                           placeholder="Пароль"
                                           value={password}
                                           onChange={event => setPassword(event.target.value)}
-                                          ref={register({
-                                              required: 'пароль не может быть пустой',
-                                              minLength: {
-                                                  value: 5,
-                                                  message: 'пароль не может быть меньше 5'
-                                              },
-                                              maxLength: {
-                                                  value: 10,
-                                                  message: 'пароль не может быть больше 10'
-                                              }
-                                          })}
+                                          // ref={register({
+                                          //     required: 'пароль не может быть пустой',
+                                          //     minLength: {
+                                          //         value: 5,
+                                          //         message: 'пароль не может быть меньше 5'
+                                          //     },
+                                          //     maxLength: {
+                                          //         value: 10,
+                                          //         message: 'пароль не может быть больше 10'
+                                          //     }
+                                          // })}
                             />
                             <Form.Text className="text-muted">
-                                {errors.password && <span className="text-danger">{errors.password.message}</span>}
+                                {/*{errors.password && <span className="text-danger">{errors.password.message}</span>}*/}
                             </Form.Text>
                         </Form.Group>
                         {
@@ -159,16 +155,16 @@ export default function AuthForm() {
                                               placeholder="Enter email"
                                               value={email}
                                               onChange={event => setEmail(event.target.value)}
-                                              ref={register({
-                                                  required: 'Email не может быть пустой',
-                                                  pattern: {
-                                                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                                      message: "Invalid email address"
-                                                  }
-                                              })}
+                                              // ref={register({
+                                              //     required: 'Email не может быть пустой',
+                                              //     pattern: {
+                                              //         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                              //         message: "Invalid email address"
+                                              //     }
+                                              // })}
                                 />
                                 <Form.Text className="text-muted">
-                                    {errors.email && <span className="text-danger">{errors.email.message}</span>}
+                                    {/*{errors.email && <span className="text-danger">{errors.email.message}</span>}*/}
                                 </Form.Text>
                             </Form.Group>
                         }
@@ -176,23 +172,23 @@ export default function AuthForm() {
                             !isLoginState &&
                             <Form.Group controlId="formBasicPhone">
                                 <Form.Label>Номер Телефона</Form.Label>
-                                <IntlTelInput
-                                    preferredCountries={['UA', 'US', 'GB']}
-                                    defaultValue={'+380 '}
-                                    paginate={4}
-                                    placeholder={'Search for a calling code by country'}
-                                    validMessage={'This phone number is valid'}
-                                    onChange={data => setPhone(data.phoneNumber)}
-                                />
+                                {/*<IntlTelInput*/}
+                                {/*    preferredCountries={['UA', 'US', 'GB']}*/}
+                                {/*    defaultValue={'+380 '}*/}
+                                {/*    paginate={4}*/}
+                                {/*    placeholder={'Search for a calling code by country'}*/}
+                                {/*    validMessage={'This phone number is valid'}*/}
+                                {/*    onChange={data => setPhone(data.phoneNumber)}*/}
+                                {/*/>*/}
                                 {/*<PhoneInput*/}
                                 {/*    placeholder="Enter phone number"*/}
                                 {/*    value={phone}*/}
                                 {/*    onChange={event => setPhone(event.target.value)}/>*/}
-                                {/*<Form.Control type="phone"*/}
-                                {/*              placeholder="Номер Телефона"*/}
-                                {/*              value={phone}*/}
-                                {/*              onChange={event => setPhone(event.target.value)}*/}
-                                {/*/>*/}
+                                <Form.Control type="phone"
+                                              placeholder="Номер Телефона"
+                                              value={phone}
+                                              onChange={event => setPhone(event.target.value)}
+                                />
                             </Form.Group>
                         }
                     </Form>
@@ -203,7 +199,7 @@ export default function AuthForm() {
                     </Button>
                     <button className="btn btn-primary"
                             type="button"
-                            onClick={handleSubmit(handleFinalSubmit)}
+                            onClick={handleFinalSubmit}
                     >
                         {
                             isLoading ?

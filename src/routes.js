@@ -12,7 +12,7 @@ export default ()=>{
             <Route path="/" component={GlobalPage} exact />
             <Route path="/user" component={UserPage}/>
             <Route path="/admin" component={AdminPage} />
-            <Route path="/product_page" component={ProductPage} />
+            <Route path="/product/get_product" component={ProductPage} />
         </Switch>
     )
 }

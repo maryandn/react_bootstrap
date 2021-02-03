@@ -14,8 +14,9 @@ export const CurrentUserProvider = ({children}) => {
         editSubCategory: false,
         editCardProduct: false,
         setProperties: false,
+        userId: null
     })
-
+    console.log(state);
     return (
         <CurrentUserContext.Provider value={[state, setState]}>
             {children}
