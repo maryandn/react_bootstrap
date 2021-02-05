@@ -16,7 +16,6 @@ export const CurrentUserProvider = ({children}) => {
         setProperties: false,
         userId: null
     })
-    console.log(state);
     return (
         <CurrentUserContext.Provider value={[state, setState]}>
             {children}

@@ -1,6 +1,7 @@
-import {ADD_CART, ADD_ONE, DEL_CART, SUBTRACT_ONE} from "../types";
+import {ADD_ALL_CART, ADD_CART, ADD_ONE, DEL_ALL_CART, DEL_CART, SUBTRACT_ONE} from "../types";
 
 if(!localStorage.getItem('cart')) {
+    console.log(localStorage.getItem('cart'))
     localStorage.setItem('cart', JSON.stringify([]))
 }
 
@@ -21,9 +22,7 @@ export const cartReducer = (state = initialState, action) => {
             }
         case ADD_ONE:
             const index1 = state.cart.findIndex(product => product.id_product.id === action.payload); //finding index of the item
-            console.log(index1);
             const newArray1 = [...state.cart]; //making a new array
-            console.log(newArray1);
             newArray1[index1].quantity += 1//changing value in the new array
             return {
                 ...state, //copying the orignal state
@@ -36,6 +35,14 @@ export const cartReducer = (state = initialState, action) => {
             return {
                 ...state, //copying the orignal state
                 cart: newArray2, //reassingning todos to new array
+            }
+        case ADD_ALL_CART:
+            return {
+                ...state, cart: [...state.cart, action.payload]
+            }
+        case DEL_ALL_CART:
+            return {
+                ...state, cart: action.payload
             }
         default:
             return state

@@ -49,9 +49,8 @@ function CardList(props) {
 
     const dispatch = useDispatch()
 
-    const [, setState] = useContext(CurrentUserContext)
+    const [state, setState] = useContext(CurrentUserContext)
 
-    console.log(props);
     const idProduct = props.specifications.id
     const urlImg = 'http://127.0.0.1:8000'
     const urlImgResponse = props.specifications.img
@@ -101,7 +100,7 @@ function CardList(props) {
                     </div>
                 </CardActions>
                 <Link to={`/product/get_product/${idProduct}`}
-                      onClick={()=> dispatch(productAction(`product/get_product/${idProduct}`))}>
+                      onClick={() => dispatch(productAction(`product/get_product/${idProduct}`))}>
                     <div>
                         <CardMedia
                             className={classes.media}
@@ -127,7 +126,10 @@ function CardList(props) {
                 <CardActions className="py-0 d-flex justify-content-between" disableSpacing>
                     <Typography color='error'>{price}₴</Typography>
 
-                    <IconButton aria-label="buy" onClick={()=>{dispatch(cartAddAction(props.specifications))}}>
+                    <IconButton aria-label="buy"
+                                onClick={() => {
+                                    dispatch(cartAddAction(props.specifications, state.isLoggedIn))
+                                }}>
                         <ShoppingCartIcon/>
                     </IconButton>
                     <IconButton

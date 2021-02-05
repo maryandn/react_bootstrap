@@ -7,9 +7,12 @@ import useFetch from "../../hooks/useFetch";
 import {Link} from "react-router-dom";
 import Cart from "./cart";
 import Form from "./Form";
+import {useDispatch} from "react-redux";
+import {cartAddFromBdActions} from "../../redux/actions/cart-action";
 
 function TopBar() {
 
+    const dispatch = useDispatch()
     const [tokenValid, setTokenValid] = useState(true)
     const [state, setState] = useContext(CurrentUserContext)
     const apiUrl = tokenValid ? '/user' : '/token/refresh/'
@@ -17,7 +20,8 @@ function TopBar() {
     const token = localStorage.getItem('token')
 
     const handleSubmitLogOut = () => {
-        localStorage.clear()
+        localStorage.removeItem('token')
+        localStorage.removeItem('refresh')
         setState(state => ({
             ...state,
             isLoggedIn: false
@@ -53,13 +57,12 @@ function TopBar() {
         if ( apiUrl === '/token/refresh/' && response !== null && response.code){
             handleSubmitLogOut()
         }
-
         if (response !== null){
-            console.log(response.id);
             setState(state => ({
                 ...state,
                 userId: response.id
             }))
+            dispatch(cartAddFromBdActions(response.id))
         }
     }, [response])
 
