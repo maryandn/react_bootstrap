@@ -2,23 +2,36 @@ import {ADD_ALL_CART, ADD_CART, ADD_ONE, DEL_ALL_CART, DEL_CART, SUBTRACT_ONE} f
 import axios from "axios";
 
 export const cartAddAction = (specifications, isLoggedIn) => {
-    return dispatch => {
+    return async dispatch => {
         if (!isLoggedIn) {
             dispatch({type: ADD_CART, payload: {quantity: 1, id_product: specifications}})
         } else {
+            const token = localStorage.getItem('token')
+            const url = `http://127.0.0.1:8000/order`
+            const bodyParameters = {
+                quantity: 1,
+                id_product: specifications.id
+            };
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
             dispatch({type: ADD_CART, payload: {quantity: 1, id_product: specifications}})
-            console.log({quantity: 1, id_product: specifications.id_product})
+            const res = await axios.post(url, bodyParameters, config)
+            console.log(res);
         }
     }
 }
 
-export const cartAddFromBdActions = (props) => {
-    const url = 'http://127.0.0.1:8000/order/'
+export const cartAddFromBdActions = () => {
+    const url = 'http://127.0.0.1:8000/order'
+    const token = localStorage.getItem('token')
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
     return async dispatch => {
         try {
             dispatch(cartDelAllActions())
-            const res = await axios.get(url + props)
-            console.log(res.data.length);
+            const res = await axios.get(url, config)
             if (res.data.length !== 0) {
                 res.data.map(res => dispatch({
                     type: ADD_ALL_CART, payload: {
@@ -34,12 +47,18 @@ export const cartAddFromBdActions = (props) => {
 }
 
 export const cartDelAction = (id, isLoggedIn) => {
-    return dispatch => {
+    return async dispatch => {
         if (!isLoggedIn) {
             dispatch({type: DEL_CART, payload: id})
         } else {
+            const token = localStorage.getItem('token')
+            const url = `http://127.0.0.1:8000/order/edit/${id}`
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
             dispatch({type: DEL_CART, payload: id})
-            console.log('del product to api')
+            const res = await axios.delete(url, config)
+            console.log(res);
         }
     }
 }
