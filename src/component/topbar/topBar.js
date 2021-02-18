@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import AuthForm from "./authForm";
 import Button from "react-bootstrap/Button";
@@ -13,9 +13,8 @@ import {cartAddFromBdActions} from "../../redux/actions/cart-action";
 function TopBar() {
 
     const dispatch = useDispatch()
-    const [tokenValid, setTokenValid] = useState(true)
     const [state, setState] = useContext(CurrentUserContext)
-    const apiUrl = tokenValid ? '/user' : '/token/refresh/'
+    const apiUrl = state.tokenValid ? '/user' : '/token/refresh/'
     const [{response}, doFetch] = useFetch(apiUrl)
     const token = localStorage.getItem('token')
 
@@ -28,8 +27,8 @@ function TopBar() {
         }))
     }
 
-    useEffect(()=>{
-        if (token){
+    useEffect(() => {
+        if (token) {
             setState(state => ({
                 ...state,
                 isLoggedIn: true
@@ -37,27 +36,34 @@ function TopBar() {
         }
     }, [])
 
-    useEffect(()=>{
-        if (state.isLoggedIn === true) {
+    useEffect(() => {
+        if (state.isLoggedIn === true && state.tokenValid === true) {
             doFetch({method: 'GET'})
-        }
-    }, [state.isLoggedIn, tokenValid])
-
-    useEffect(()=>{
-
-        if (response !== null && response.code){
+        } else if (state.isLoggedIn === true && state.tokenValid === false) {
             doFetch({method: 'POST'})
-            setTokenValid(false)
+        }
+    }, [state.isLoggedIn, state.tokenValid])
+
+
+    useEffect(() => {
+        if (apiUrl === '/user' && response !== null && response.code) {
+            setState(state => ({
+                ...state,
+                tokenValid: false
+            }))
         }
 
-        if (response !== null && response.access){
+        if (response !== null && response.access) {
             localStorage.setItem('token', response.access)
-            setTokenValid(true)
+            setState(state => ({
+                ...state,
+                tokenValid: true
+            }))
         }
-        if ( apiUrl === '/token/refresh/' && response !== null && response.code){
+        if (apiUrl === '/token/refresh/' && response !== null && response.code) {
             handleSubmitLogOut()
         }
-        if (response !== null){
+        if (apiUrl === '/user' && response !== null && state.tokenValid) {
             setState(state => ({
                 ...state,
                 userId: response.id
@@ -68,7 +74,7 @@ function TopBar() {
 
     return (
         <Navbar bg="dark" variant="dark">
-            <Link  to={'/'}>
+            <Link to={'/'}>
                 <Navbar.Brand>Super Shop</Navbar.Brand>
             </Link>
             <Navbar.Toggle/>

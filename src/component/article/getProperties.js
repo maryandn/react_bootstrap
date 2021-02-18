@@ -34,7 +34,6 @@ export default function GetProperties({forwardRef, url, properties, defaultValue
                         custom
                     >
                         {
-                            // defaultOptions ? <option defaultValue={defaultValue}>Choose...</option> : ''
                             defaultOptions ? <option defaultValue={defaultValue}>Choose...</option> : ''
                         }
                         <option value={defaultValue}>brand</option>

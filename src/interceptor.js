@@ -13,7 +13,7 @@ export const unregister = fetchIntercept.register({
             })
         }
 
-        if(typeof(config.body) === "object") {
+        if (typeof (config.body) === "object") {
             config.headers = {}
         }
         return [url, config];
@@ -24,10 +24,6 @@ export const unregister = fetchIntercept.register({
     },
 
     response: function (response) {
-
-        if (response.status === 401) {
-            console.log(response.status)
-        }
         return response;
     },
 

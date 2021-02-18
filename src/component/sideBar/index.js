@@ -26,8 +26,10 @@ export default function NestedList() {
 
 
     useEffect(() => {
-        doFetch({method: 'GET'})
-    }, [state.editCategory])
+        if (state.tokenValid){
+            doFetch({method: 'GET'})
+        }
+    }, [state.editCategory, state.tokenValid])
 
     return (
         <List

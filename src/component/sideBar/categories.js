@@ -10,8 +10,8 @@ import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function Categories(props) {
 
-    const [state, ] = useContext(CurrentUserContext)
-    const apiUrl = `/categories/sub_categories/${props.id}`
+    const [state,] = useContext(CurrentUserContext)
+    const apiUrl = `/categories/sub_categories/${props.id}/`
     const [{response}, doFetch] = useFetch(apiUrl)
 
     const [open, setOpen] = React.useState(false);
@@ -21,8 +21,10 @@ export default function Categories(props) {
     };
 
     useEffect(() => {
-        doFetch({method: 'GET'})
-    }, [state.editSubCategory])
+        if (state.tokenValid) {
+            doFetch({method: 'GET'})
+        }
+    }, [state.editSubCategory, state.tokenValid])
 
     return (
         <>

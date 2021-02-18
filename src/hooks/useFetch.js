@@ -24,11 +24,11 @@ export default (url) => {
             ...{
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    // 'Authorization': 'Bearer ' + getToken
                 }
             }
         }
-
         fetch(baseUrl + url, requestOptions)
             .then(response => response.json())
             .then(res => {

@@ -11,7 +11,7 @@ import {CurrentUserContext} from "../../contexts/currentUser";
 function Cart() {
     const dispatch = useDispatch()
     const cart = useSelector(state => state.cart.cart)
-    const [state, setState] = useContext(CurrentUserContext)
+    const [state, ] = useContext(CurrentUserContext)
     const baseUrl = "http://127.0.0.1:8000"
     let totalPrice = 0
     const [show, setShow] = useState(false)
@@ -50,7 +50,7 @@ function Cart() {
                                         <button className="btn btn-light"
                                                 disabled={item.quantity < 2 && true}
                                                 onClick={() => dispatch(subtractOneQuantity(item.id_product.id,
-                                                    state.isLoggedIn))
+                                                    state.isLoggedIn, item.quantity))
                                                 }
                                         >
                                             -
@@ -58,7 +58,7 @@ function Cart() {
                                         {item.quantity}
                                         <button className="btn btn-light"
                                                 onClick={() => dispatch(addOneQuantity(item.id_product.id,
-                                                    state.isLoggedIn))
+                                                    state.isLoggedIn, item.quantity))
                                                 }
                                         >
                                             +

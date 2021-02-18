@@ -9,7 +9,7 @@ import {CurrentUserContext} from "../../contexts/currentUser";
 
 export default function EditSubCategory(props){
 
-    const [state, setState] = useContext(CurrentUserContext)
+    const [, setState] = useContext(CurrentUserContext)
     const [doFetchMethod, setDoFetchMethod] = useState('')
     const [subCategory, setSubCategory] = useState({name: ''})
     const [categoryStatus, setCategoryStatus] = useState(false);

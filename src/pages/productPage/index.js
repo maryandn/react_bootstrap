@@ -8,7 +8,7 @@ export default function ProductPage() {
     const dispatch = useDispatch()
     const product = useSelector(state => state.product.product)
     const urlBase = 'http://127.0.0.1:8000'
-    const {id, name, img} = product
+    const {name, img} = product
     const url = window.location.pathname
 
     useEffect(() => {
